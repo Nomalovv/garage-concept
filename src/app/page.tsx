@@ -2,6 +2,7 @@ import Link from "next/link";
 import ContactSection from "@/components/ContactSection";
 import FeaturedCars from "@/components/FeaturedCars";
 import HomeHero from "@/components/HomeHero";
+import PlancheAtelier from "@/components/PlancheAtelier";
 import Reveal from "@/components/Reveal";
 import SceneHeading from "@/components/SceneHeading";
 import ServicesGrid from "@/components/ServicesGrid";
@@ -44,6 +45,9 @@ export default function HomePage() {
       <HomeHero />
 
       <BandeauDefilant />
+
+      {/* Planche contact — quatre plans de l'atelier */}
+      <PlancheAtelier />
 
       {/* Scène 01 — le catalogue */}
       <section className="bg-papier-50">

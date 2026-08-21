@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { EASE_CINEMA } from "@/components/Reveal";
 import { garageInfo } from "@/lib/garageInfo";
+import { photos } from "@/lib/photos";
 
 const CHIFFRES = [
   { label: "Garantie", value: "12 mois" },
@@ -43,31 +45,39 @@ export default function HomeHero() {
       className="relative isolate overflow-hidden bg-papier-100"
     >
       {/* ─────────────────────────────────────────────────────────────────
-          EMPLACEMENT VIDÉO DE FOND
-          Aucune vidéo n'est disponible pour l'instant : le fond est généré
-          en CSS (dégradés animés + grain) juste en dessous.
-          Le jour où une vidéo de l'atelier existe, remplacer TOUT le bloc
-          `<div aria-hidden ... className="absolute inset-0 -z-10 grain">`
-          par exactement ceci, sans rien changer d'autre :
+          PLAN DE FOND
+          Une vraie photo d'atelier (noir et blanc), tirée comme une image
+          imprimée : voile papier + réglure + grain par-dessus, pour qu'elle
+          reste une texture de fond et que le texte sombre garde son contraste.
+          Pour la remplacer par une photo du vrai atelier : écraser
+          `public/images/atelier-pont.jpg` en gardant le même nom.
 
-          <div aria-hidden="true" className="absolute inset-0 -z-10">
-            <video
-              className="h-full w-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              poster="/images/atelier-poster.jpg"
-            >
-              <source src="/videos/atelier.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-papier-50/70" />
-          </div>
+          Le jour où une vidéo de l'atelier existe, remplacer le `<Image>`
+          ci-dessous par exactement ceci, sans rien changer d'autre :
 
-          (le voile clair au-dessus garde le texte lisible sur l'image)
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/images/atelier-pont.jpg"
+          >
+            <source src="/videos/atelier.mp4" type="video/mp4" />
+          </video>
       ───────────────────────────────────────────────────────────────── */}
       <div aria-hidden="true" className="absolute inset-0 -z-10 grain">
-        <div className="absolute inset-0 bg-linear-to-b from-papier-50 via-papier-100 to-papier-200" />
+        <Image
+          src={photos.atelier.src}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        {/* Voile papier : la photo passe derrière le texte, pas devant. */}
+        <div className="absolute inset-0 bg-papier-100/68" />
+        <div className="absolute inset-0 bg-linear-to-r from-papier-50 via-papier-50/85 to-transparent lg:via-papier-50/60" />
         {/* Réglure de feuille de service + voile de rouille rasant : une texture
             imprimée plutôt que des halos flous de landing page. */}
         <div className="absolute inset-0 reglure" />
