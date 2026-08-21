@@ -27,24 +27,24 @@ export default function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-nuit-800 bg-nuit-900 text-white">
+    <header className="sticky top-0 z-50 border-b border-nuit-900/10 bg-papier-50/85 text-nuit-900 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="flex items-center gap-2"
+          className="flex items-center gap-3"
           onClick={() => setOpen(false)}
         >
           <span
             aria-hidden="true"
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-flamme-600 font-bold text-white"
+            className="flex h-9 w-9 items-center justify-center bg-flamme-600 font-bold text-white"
           >
             GC
           </span>
           <span className="flex flex-col leading-tight">
-            <span className="text-base font-semibold tracking-tight">
+            <span className="titre-scene text-lg text-nuit-950">
               {garageInfo.name}
             </span>
-            <span className="hidden text-[11px] uppercase tracking-widest text-nuit-200 sm:block">
+            <span className="repere-scene hidden text-[10px] text-acier-600 sm:block">
               {garageInfo.address.city}
             </span>
           </span>
@@ -55,10 +55,10 @@ export default function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
-              className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              className={`px-3 py-2 text-sm font-medium transition-colors ${
                 isActive(link.href)
-                  ? "bg-nuit-800 text-flamme-500"
-                  : "text-nuit-100 hover:bg-nuit-800 hover:text-white"
+                  ? "text-flamme-600"
+                  : "text-acier-600 hover:text-nuit-950"
               }`}
             >
               {link.label}
@@ -66,7 +66,7 @@ export default function SiteHeader() {
           ))}
           <a
             href={`tel:${garageInfo.phone}`}
-            className="ml-3 rounded-md bg-flamme-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-flamme-700"
+            className="ml-3 rounded-full bg-nuit-950 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-flamme-600"
           >
             {garageInfo.phoneDisplay}
           </a>
@@ -77,7 +77,7 @@ export default function SiteHeader() {
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
           aria-label="Ouvrir le menu de navigation"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-nuit-700 text-white md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center border border-nuit-900/20 text-nuit-900 md:hidden"
         >
           <svg
             aria-hidden="true"
@@ -98,17 +98,17 @@ export default function SiteHeader() {
       </div>
 
       {open ? (
-        <nav className="border-t border-nuit-800 bg-nuit-900 md:hidden">
+        <nav className="border-t border-nuit-900/10 bg-papier-50 md:hidden">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3 sm:px-6">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className={`rounded-md px-3 py-2 text-sm font-medium ${
+                className={`border-b border-nuit-900/10 px-1 py-3 text-sm font-medium last:border-0 ${
                   isActive(link.href)
-                    ? "bg-nuit-800 text-flamme-500"
-                    : "text-nuit-100 hover:bg-nuit-800"
+                    ? "text-flamme-600"
+                    : "text-nuit-900 hover:text-flamme-600"
                 }`}
               >
                 {link.label}
@@ -116,7 +116,7 @@ export default function SiteHeader() {
             ))}
             <a
               href={`tel:${garageInfo.phone}`}
-              className="mt-2 rounded-md bg-flamme-600 px-3 py-2 text-center text-sm font-semibold text-white"
+              className="mt-3 rounded-full bg-nuit-950 px-3 py-3 text-center text-sm font-semibold text-white"
             >
               Appeler le {garageInfo.phoneDisplay}
             </a>

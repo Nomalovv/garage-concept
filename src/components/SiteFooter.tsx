@@ -6,7 +6,10 @@ export default function SiteFooter() {
     <footer className="mt-auto border-t border-nuit-800 bg-nuit-950 text-nuit-100">
       <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
-          <p className="text-lg font-semibold text-white">{garageInfo.name}</p>
+          <p className="repere-scene text-flamme-500">Générique de fin</p>
+          <p className="titre-scene mt-3 text-3xl text-white">
+            {garageInfo.name}
+          </p>
           <p className="mt-3 text-sm leading-relaxed text-nuit-200">
             {garageInfo.tagline}. Vente de véhicules d&apos;occasion, entretien
             et réparation toutes marques à {garageInfo.address.city}.
@@ -14,9 +17,7 @@ export default function SiteFooter() {
         </div>
 
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-flamme-500">
-            Coordonnées
-          </p>
+          <p className="repere-scene text-flamme-500">Coordonnées</p>
           <ul className="mt-3 space-y-2 text-sm text-nuit-200">
             <li>{fullAddress}</li>
             <li>
@@ -39,9 +40,7 @@ export default function SiteFooter() {
         </div>
 
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-flamme-500">
-            Horaires
-          </p>
+          <p className="repere-scene text-flamme-500">Horaires</p>
           <ul className="mt-3 space-y-2 text-sm text-nuit-200">
             {garageInfo.hours.map((slot) => (
               <li key={slot.days} className="flex justify-between gap-4">

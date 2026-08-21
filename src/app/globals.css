@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* Bleu nuit — texte foncé, scènes de contraste, footer */
   --color-nuit-950: #050d18;
   --color-nuit-900: #0a1a2f;
   --color-nuit-800: #122943;
@@ -13,13 +14,58 @@
   --color-acier-600: #4b5b6b;
   --color-acier-400: #8b9aab;
 
+  /* Orange — unique couleur d'accent du site */
   --color-flamme-700: #c2410c;
   --color-flamme-600: #ea580c;
   --color-flamme-500: #f97316;
   --color-flamme-100: #ffedd5;
 
+  /* Papier — base chaude « magazine » de la direction cinématographique */
+  --color-papier-50: #fdfbf7;
+  --color-papier-100: #f7f4ee;
+  --color-papier-200: #efe9de;
+  --color-papier-300: #e3dbcb;
+  --color-papier-400: #cdc1ac;
+
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Mouvements d'ambiance (fond de bandeau, bandeau défilant) */
+  --animate-projection: projection 26s ease-in-out infinite alternate;
+  --animate-projection-slow: projection-slow 34s ease-in-out infinite alternate;
+  --animate-defile: defile 42s linear infinite;
+
+  @keyframes projection {
+    0% {
+      transform: translate3d(-4%, -2%, 0) scale(1.05);
+      opacity: 0.85;
+    }
+    100% {
+      transform: translate3d(6%, 4%, 0) scale(1.18);
+      opacity: 1;
+    }
+  }
+
+  @keyframes projection-slow {
+    0% {
+      transform: translate3d(5%, 3%, 0) scale(1.12);
+      opacity: 0.7;
+    }
+    100% {
+      transform: translate3d(-6%, -3%, 0) scale(1);
+      opacity: 0.95;
+    }
+  }
+
+  @keyframes defile {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
 }
 
 html {
@@ -27,8 +73,80 @@ html {
 }
 
 body {
-  background-color: var(--color-white);
+  background-color: var(--color-papier-50);
   color: var(--color-nuit-900);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Titres éditoriaux : serif optique, crénage serré, pas de fioriture. */
+.titre-scene {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+/* Étiquette « script de film » : petites capitales espacées, monospace. */
+.repere-scene {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+/* Grain argentique très léger posé sur les fonds animés. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='0.32'/%3E%3C/svg%3E");
+}
+
+/* Obturateur d'ouverture : deux volets sombres qui se rétractent au chargement.
+   Animation 100 % CSS pour qu'elle démarre au premier rendu, sans attendre JS. */
+.obturateur {
+  animation: obturateur 1.15s cubic-bezier(0.76, 0, 0.24, 1) 0.05s forwards;
+  transform-origin: top center;
+}
+
+.obturateur-bas {
+  transform-origin: bottom center;
+}
+
+@keyframes obturateur {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0);
+  }
+}
+
+/* Bandeau défilant façon générique : le contenu est dupliqué dans le JSX. */
+.piste-defilante {
+  display: flex;
+  width: max-content;
+  animation: var(--animate-defile);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .piste-defilante {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
