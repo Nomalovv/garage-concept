@@ -12,10 +12,16 @@ import {
 } from "@/components/StateMessage";
 import { fetchCar } from "@/lib/cars";
 import { isFirebaseConfigured } from "@/lib/firebase";
-import { formatMileage, formatPrice } from "@/lib/format";
+import { formatMileage, formatMonth, formatPrice } from "@/lib/format";
 import { fiscalHorsepower, hpFromKw } from "@/lib/power";
 import { garageInfo } from "@/lib/garageInfo";
-import { FUEL_LABELS, TRANSMISSION_LABELS, type Car } from "@/types";
+import {
+  BODY_TYPE_LABELS,
+  EURO_NORM_LABELS,
+  FUEL_LABELS,
+  TRANSMISSION_LABELS,
+  type Car,
+} from "@/types";
 
 function BackLink() {
   return (
@@ -116,10 +122,20 @@ function CarView({ id }: { id: string }) {
     { label: "Kilométrage", value: formatMileage(car.mileage) },
     { label: "Carburant", value: FUEL_LABELS[car.fuel] },
     { label: "Boîte de vitesses", value: TRANSMISSION_LABELS[car.transmission] },
+    { label: "Carrosserie", value: BODY_TYPE_LABELS[car.bodyType] },
     ...(car.engine ? [{ label: "Motorisation", value: car.engine }] : []),
     ...(hp !== null ? [{ label: "Puissance", value: `${hp} ch` }] : []),
     ...(fiscalHp !== null
       ? [{ label: "Puissance fiscale", value: `${fiscalHp} CV` }]
+      : []),
+    ...(car.doors ? [{ label: "Portes", value: String(car.doors) }] : []),
+    ...(car.seats ? [{ label: "Places", value: String(car.seats) }] : []),
+    ...(car.color ? [{ label: "Couleur", value: car.color }] : []),
+    ...(car.firstRegistration
+      ? [{ label: "1ère mise en circulation", value: formatMonth(car.firstRegistration) }]
+      : []),
+    ...(car.euroNorm
+      ? [{ label: "Norme Euro", value: EURO_NORM_LABELS[car.euroNorm] }]
       : []),
   ];
 

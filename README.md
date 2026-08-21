@@ -82,10 +82,17 @@ base (bouton « Importer les prestations par défaut » dans `/admin/services`).
 
 ### Modèle de données Firestore
 
-- Collection `cars` : `brand`, `model`, `year`, `price`, `mileage`, `fuel`
-  (`essence` | `diesel` | `hybride` | `electrique`), `transmission`
-  (`manuelle` | `automatique`), `description`, `images` (tableau d'URL),
-  `sold`, `createdAt`, `updatedAt`.
+- Collection `cars` : `brand`, `model`, `trim` (finition), `engine`
+  (motorisation), `powerKw`, `co2` (utilisés pour calculer ch/CV fiscaux),
+  `bodyType` (`citadine` | `berline` | `break` | `suv` | `monospace` |
+  `coupe` | `cabriolet` | `utilitaire`), `doors`, `seats`, `color`,
+  `firstRegistration` (`AAAA-MM`), `euroNorm` (`euro3` à `euro6d`), `year`,
+  `price`, `mileage`, `fuel` (`essence` | `diesel` | `hybride` |
+  `electrique`), `transmission` (`manuelle` | `automatique`), `description`,
+  `images` (tableau d'URL), `sold`, `createdAt`, `updatedAt`.
+- Les suggestions marque/modèle du formulaire admin viennent d'un catalogue
+  local (`src/lib/carCatalog.ts`), pas d'une API : NHTSA (seule API gratuite
+  disponible) ne couvre pas correctement le marché français/européen.
 - Collection `services` : `name`, `description`, `price`, `icon`, `order`.
 
 Lecture publique, écriture réservée aux utilisateurs authentifiés

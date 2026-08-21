@@ -1,16 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Spinner } from "@/components/StateMessage";
+import { carBrands, carModelsForBrand } from "@/lib/carCatalog";
 import { createCar, updateCar } from "@/lib/cars";
 import { fiscalHorsepower, hpFromKw } from "@/lib/power";
-import { fetchCarMakes, fetchModelsForMake } from "@/lib/vehicleApi";
 import {
+  BODY_TYPE_LABELS,
+  EURO_NORM_LABELS,
   FUEL_LABELS,
   TRANSMISSION_LABELS,
+  type BodyType,
   type Car,
   type CarInput,
+  type EuroNorm,
   type Fuel,
   type Transmission,
 } from "@/types";
@@ -22,6 +26,12 @@ type FormValues = {
   engine: string;
   powerKw: string;
   co2: string;
+  bodyType: BodyType;
+  doors: string;
+  seats: string;
+  color: string;
+  firstRegistration: string;
+  euroNorm: EuroNorm | "";
   year: string;
   price: string;
   mileage: string;
@@ -39,6 +49,12 @@ function initialValues(car: Car | null): FormValues {
     engine: car?.engine ?? "",
     powerKw: car?.powerKw ? String(car.powerKw) : "",
     co2: car?.co2 ? String(car.co2) : "",
+    bodyType: car?.bodyType ?? "berline",
+    doors: car?.doors ? String(car.doors) : "5",
+    seats: car?.seats ? String(car.seats) : "5",
+    color: car?.color ?? "",
+    firstRegistration: car?.firstRegistration ?? "",
+    euroNorm: car?.euroNorm ?? "",
     year: String(car?.year ?? new Date().getFullYear()),
     price: car ? String(car.price) : "",
     mileage: car ? String(car.mileage) : "",
@@ -67,34 +83,9 @@ export default function CarForm({
   const [newImageUrl, setNewImageUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [brandOptions, setBrandOptions] = useState<string[]>([]);
-  const [modelOptions, setModelOptions] = useState<string[]>([]);
 
-  useEffect(() => {
-    let active = true;
-    fetchCarMakes().then((makes) => {
-      if (active) setBrandOptions(makes);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!values.brand.trim()) return;
-    let active = true;
-    const timer = setTimeout(() => {
-      fetchModelsForMake(values.brand).then((models) => {
-        if (active) setModelOptions(models);
-      });
-    }, 400);
-    return () => {
-      active = false;
-      clearTimeout(timer);
-    };
-  }, [values.brand]);
-
-  const modelOptionsForBrand = values.brand.trim() ? modelOptions : [];
+  const brandOptions = carBrands();
+  const modelOptionsForBrand = carModelsForBrand(values.brand);
 
   function update<K extends keyof FormValues>(key: K, value: FormValues[K]) {
     setValues((current) => ({ ...current, [key]: value }));
@@ -127,6 +118,12 @@ export default function CarForm({
       engine: values.engine.trim(),
       powerKw: powerKwValue,
       co2: co2Value,
+      bodyType: values.bodyType,
+      doors: Number(values.doors) || 0,
+      seats: Number(values.seats) || 0,
+      color: values.color.trim(),
+      firstRegistration: values.firstRegistration,
+      euroNorm: values.euroNorm,
       year: Number(values.year) || new Date().getFullYear(),
       price: Number(values.price) || 0,
       mileage: Number(values.mileage) || 0,
@@ -271,6 +268,100 @@ export default function CarForm({
             ) : null}
           </div>
         ) : null}
+        <div>
+          <label className={labelClass} htmlFor="bodyType">
+            Carrosserie
+          </label>
+          <select
+            id="bodyType"
+            value={values.bodyType}
+            onChange={(event) =>
+              update("bodyType", event.target.value as BodyType)
+            }
+            className={fieldClass}
+          >
+            {(Object.keys(BODY_TYPE_LABELS) as BodyType[]).map((value) => (
+              <option key={value} value={value}>
+                {BODY_TYPE_LABELS[value]}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="color">
+            Couleur
+          </label>
+          <input
+            id="color"
+            value={values.color}
+            onChange={(event) => update("color", event.target.value)}
+            placeholder="Blanc nacré, Gris platinium…"
+            className={fieldClass}
+          />
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="doors">
+            Portes
+          </label>
+          <select
+            id="doors"
+            value={values.doors}
+            onChange={(event) => update("doors", event.target.value)}
+            className={fieldClass}
+          >
+            {["2", "3", "4", "5"].map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="seats">
+            Places
+          </label>
+          <input
+            id="seats"
+            type="number"
+            min="1"
+            max="9"
+            value={values.seats}
+            onChange={(event) => update("seats", event.target.value)}
+            className={fieldClass}
+          />
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="firstRegistration">
+            1ère mise en circulation
+          </label>
+          <input
+            id="firstRegistration"
+            type="month"
+            value={values.firstRegistration}
+            onChange={(event) => update("firstRegistration", event.target.value)}
+            className={fieldClass}
+          />
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="euroNorm">
+            Norme Euro
+          </label>
+          <select
+            id="euroNorm"
+            value={values.euroNorm}
+            onChange={(event) =>
+              update("euroNorm", event.target.value as EuroNorm | "")
+            }
+            className={fieldClass}
+          >
+            <option value="">Non renseignée</option>
+            {(Object.keys(EURO_NORM_LABELS) as EuroNorm[]).map((value) => (
+              <option key={value} value={value}>
+                {EURO_NORM_LABELS[value]}
+              </option>
+            ))}
+          </select>
+        </div>
         <div>
           <label className={labelClass} htmlFor="year">
             Année

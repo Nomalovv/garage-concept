@@ -13,12 +13,23 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 import { getDb } from "@/lib/firebase";
-import type { Car, CarInput, Fuel, Transmission } from "@/types";
+import type { BodyType, Car, CarInput, EuroNorm, Fuel, Transmission } from "@/types";
 
 const COLLECTION = "cars";
 
 const FUELS: Fuel[] = ["essence", "diesel", "hybride", "electrique"];
 const TRANSMISSIONS: Transmission[] = ["manuelle", "automatique"];
+const BODY_TYPES: BodyType[] = [
+  "citadine",
+  "berline",
+  "break",
+  "suv",
+  "monospace",
+  "coupe",
+  "cabriolet",
+  "utilitaire",
+];
+const EURO_NORMS: EuroNorm[] = ["euro3", "euro4", "euro5", "euro6", "euro6d"];
 
 function toNumber(value: unknown, fallback = 0): number {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
@@ -34,6 +45,8 @@ function toImages(value: unknown): string[] {
 function mapCar(id: string, data: DocumentData): Car {
   const fuel = data.fuel as Fuel;
   const transmission = data.transmission as Transmission;
+  const bodyType = data.bodyType as BodyType;
+  const euroNorm = data.euroNorm as EuroNorm;
   return {
     id,
     brand: typeof data.brand === "string" ? data.brand : "",
@@ -42,6 +55,13 @@ function mapCar(id: string, data: DocumentData): Car {
     engine: typeof data.engine === "string" ? data.engine : "",
     powerKw: toNumber(data.powerKw),
     co2: toNumber(data.co2),
+    bodyType: BODY_TYPES.includes(bodyType) ? bodyType : "berline",
+    doors: toNumber(data.doors),
+    seats: toNumber(data.seats),
+    color: typeof data.color === "string" ? data.color : "",
+    firstRegistration:
+      typeof data.firstRegistration === "string" ? data.firstRegistration : "",
+    euroNorm: EURO_NORMS.includes(euroNorm) ? euroNorm : "",
     year: toNumber(data.year, new Date().getFullYear()),
     price: toNumber(data.price),
     mileage: toNumber(data.mileage),
