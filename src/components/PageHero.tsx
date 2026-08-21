@@ -73,7 +73,12 @@ export default function PageHero({
             <dl className="mt-10 grid max-w-2xl grid-cols-2 gap-6 border-t border-nuit-900/15 pt-6 sm:grid-cols-3">
               {facts.map((fact) => (
                 <div key={fact.label}>
-                  <dt className="repere-scene text-acier-600">{fact.label}</dt>
+                  {/* Hauteur réservée à 2 lignes : un libellé plus long qui
+                      passe à la ligne ne doit pas décaler sa valeur par
+                      rapport aux libellés voisins tenant sur une ligne. */}
+                  <dt className="repere-scene min-h-9 text-acier-600">
+                    {fact.label}
+                  </dt>
                   <dd className="titre-scene mt-2 text-2xl text-nuit-950">
                     {fact.value}
                   </dd>
