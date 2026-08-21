@@ -47,7 +47,7 @@ export default function HomePage() {
 
       {/* Scène 01 — le catalogue */}
       <section className="bg-papier-50">
-        <div className="mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <SceneHeading
             number="01"
             label="Le catalogue"
@@ -62,7 +62,7 @@ export default function HomePage() {
             }
             description="Une sélection de voitures révisées, garanties 12 mois et livrées avec leur carnet d'entretien complet."
           />
-          <Reveal delay={0.1} className="mt-14">
+          <Reveal delay={0.1} className="mt-10">
             <FeaturedCars count={4} />
           </Reveal>
         </div>
@@ -70,7 +70,7 @@ export default function HomePage() {
 
       {/* Scène 02 — l'atelier */}
       <section className="border-y border-nuit-900/10 bg-papier-100">
-        <div className="mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <SceneHeading
             number="02"
             label="L'atelier"
@@ -97,7 +97,7 @@ export default function HomePage() {
               </Link>
             }
           />
-          <Reveal delay={0.1} className="mt-14">
+          <Reveal delay={0.1} className="mt-10">
             <ServicesGrid limit={6} />
           </Reveal>
         </div>
@@ -107,9 +107,13 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-nuit-950 text-white">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(249,115,22,0.18),transparent_55%)]"
+          className="absolute inset-0 reglure-sombre opacity-70"
         />
-        <div className="relative mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-linear-to-b from-flamme-700/35 via-transparent to-transparent"
+        />
+        <div className="relative mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <SceneHeading
             number="03"
             label="Les garanties"
@@ -124,7 +128,7 @@ export default function HomePage() {
             description="Six engagements tenus sur chaque véhicule vendu et chaque intervention réalisée à l'atelier."
           />
 
-          <div className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {strengths.map((item, index) => (
               <Reveal key={item.title} delay={index * 0.08}>
                 <div className="border-t border-white/20 pt-5">
@@ -146,7 +150,7 @@ export default function HomePage() {
 
       {/* Scène 04 — les témoignages */}
       <section className="bg-papier-50">
-        <div className="mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <SceneHeading
             number="04"
             label="Les témoignages"
@@ -159,7 +163,7 @@ export default function HomePage() {
             }
           />
 
-          <div className="mt-16 grid gap-10 md:grid-cols-3">
+          <div className="mt-12 grid gap-10 md:grid-cols-3">
             {testimonials.map((review, index) => (
               <Reveal key={review.name} delay={index * 0.1}>
                 <figure className="flex h-full flex-col border-t border-nuit-900/15 pt-6">
@@ -201,7 +205,7 @@ export default function HomePage() {
         id="contact"
         className="border-t border-nuit-900/10 bg-papier-100"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <SceneHeading
             number="05"
             label="Le rendez-vous"
@@ -214,7 +218,7 @@ export default function HomePage() {
             }
             description={`L'atelier vous accueille du lundi au samedi, avec ou sans rendez-vous, au ${garageInfo.address.street} à ${garageInfo.address.city}.`}
           />
-          <Reveal delay={0.1} className="mt-14">
+          <Reveal delay={0.1} className="mt-10">
             <ContactSection />
           </Reveal>
         </div>

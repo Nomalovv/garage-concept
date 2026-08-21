@@ -14,11 +14,13 @@
   --color-acier-600: #4b5b6b;
   --color-acier-400: #8b9aab;
 
-  /* Orange — unique couleur d'accent du site */
-  --color-flamme-700: #c2410c;
-  --color-flamme-600: #ea580c;
-  --color-flamme-500: #f97316;
-  --color-flamme-100: #ffedd5;
+  /* Rouille d'atelier — unique couleur d'accent du site.
+     Volontairement désaturée (terre / oxyde) plutôt qu'orange vif. */
+  --color-flamme-700: #6b2f14;
+  --color-flamme-600: #99441f;
+  --color-flamme-500: #c2652f;
+  --color-flamme-400: #d68e5e;
+  --color-flamme-100: #f0e3d8;
 
   /* Papier — base chaude « magazine » de la direction cinématographique */
   --color-papier-50: #fdfbf7;
@@ -27,36 +29,12 @@
   --color-papier-300: #e3dbcb;
   --color-papier-400: #cdc1ac;
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), "Iowan Old Style", Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
-  /* Mouvements d'ambiance (fond de bandeau, bandeau défilant) */
-  --animate-projection: projection 26s ease-in-out infinite alternate;
-  --animate-projection-slow: projection-slow 34s ease-in-out infinite alternate;
+  /* Mouvement d'ambiance (bandeau défilant du générique) */
   --animate-defile: defile 42s linear infinite;
-
-  @keyframes projection {
-    0% {
-      transform: translate3d(-4%, -2%, 0) scale(1.05);
-      opacity: 0.85;
-    }
-    100% {
-      transform: translate3d(6%, 4%, 0) scale(1.18);
-      opacity: 1;
-    }
-  }
-
-  @keyframes projection-slow {
-    0% {
-      transform: translate3d(5%, 3%, 0) scale(1.12);
-      opacity: 0.7;
-    }
-    100% {
-      transform: translate3d(-6%, -3%, 0) scale(1);
-      opacity: 0.95;
-    }
-  }
 
   @keyframes defile {
     from {
@@ -79,23 +57,25 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Titres éditoriaux : serif optique, crénage serré, pas de fioriture. */
+/* Titres éditoriaux : serif de presse, taille optique automatique. */
 .titre-scene {
   font-family: var(--font-serif);
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.02;
+  font-optical-sizing: auto;
+  letter-spacing: -0.012em;
+  line-height: 1.05;
 }
 
-/* Étiquette « script de film » : petites capitales espacées, monospace. */
+/* Étiquette « feuille de tournage » : petites capitales espacées, monospace. */
 .repere-scene {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.32em;
+  font-weight: 500;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
 }
 
-/* Grain argentique très léger posé sur les fonds animés. */
+/* Grain argentique très léger posé sur les fonds éditoriaux. */
 .grain::after {
   content: "";
   position: absolute;
@@ -104,6 +84,32 @@ body {
   opacity: 0.4;
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='0.32'/%3E%3C/svg%3E");
+}
+
+/* Réglure très pâle façon feuille de service : remplace les halos flous. */
+.reglure {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(10, 26, 47, 0.055) 0 1px,
+    transparent 1px 36px
+  );
+}
+
+.reglure-sombre {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 36px
+  );
+}
+
+/* Vignettage photographique : assombrit les bords comme un cadre de pellicule. */
+.vignettage {
+  background-image: radial-gradient(
+    118% 88% at 50% 26%,
+    transparent 38%,
+    rgba(5, 13, 24, 0.14) 100%
+  );
 }
 
 /* Obturateur d'ouverture : deux volets sombres qui se rétractent au chargement.

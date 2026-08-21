@@ -66,7 +66,7 @@ export default function SiteHeader() {
           ))}
           <a
             href={`tel:${garageInfo.phone}`}
-            className="ml-3 rounded-full bg-nuit-950 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-flamme-600"
+            className="ml-3 bg-nuit-950 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-flamme-700"
           >
             {garageInfo.phoneDisplay}
           </a>
@@ -116,7 +116,7 @@ export default function SiteHeader() {
             ))}
             <a
               href={`tel:${garageInfo.phone}`}
-              className="mt-3 rounded-full bg-nuit-950 px-3 py-3 text-center text-sm font-semibold text-white"
+              className="mt-3 bg-nuit-950 px-3 py-3 text-center text-sm font-semibold text-white"
             >
               Appeler le {garageInfo.phoneDisplay}
             </a>

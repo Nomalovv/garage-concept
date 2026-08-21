@@ -50,7 +50,7 @@ export default function SceneHeading({
         </span>
       </div>
 
-      <div className="mt-8 flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+      <div className="mt-6 flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
         <div className="max-w-3xl">
           <h2
             className={`titre-scene text-[2.5rem] sm:text-6xl lg:text-7xl ${
@@ -61,7 +61,7 @@ export default function SceneHeading({
           </h2>
           {description ? (
             <p
-              className={`mt-6 max-w-xl text-base leading-relaxed sm:text-lg ${
+              className={`mt-5 max-w-xl text-base leading-relaxed sm:text-lg ${
                 isDark ? "text-nuit-200" : "text-acier-600"
               }`}
             >

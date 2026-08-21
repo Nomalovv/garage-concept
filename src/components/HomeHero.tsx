@@ -68,9 +68,13 @@ export default function HomeHero() {
       ───────────────────────────────────────────────────────────────── */}
       <div aria-hidden="true" className="absolute inset-0 -z-10 grain">
         <div className="absolute inset-0 bg-linear-to-b from-papier-50 via-papier-100 to-papier-200" />
-        <div className="absolute -left-1/4 top-[-30%] h-[80vh] w-[80vw] rounded-full bg-[radial-gradient(circle,rgba(249,115,22,0.22),transparent_65%)] blur-3xl animate-projection" />
-        <div className="absolute -right-1/4 bottom-[-35%] h-[80vh] w-[75vw] rounded-full bg-[radial-gradient(circle,rgba(28,59,92,0.20),transparent_65%)] blur-3xl animate-projection-slow" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-b from-transparent to-papier-100" />
+        {/* Réglure de feuille de service + voile de rouille rasant : une texture
+            imprimée plutôt que des halos flous de landing page. */}
+        <div className="absolute inset-0 reglure" />
+        <div className="absolute inset-0 bg-linear-to-tr from-flamme-700/10 via-transparent to-transparent" />
+        <div className="absolute inset-y-0 left-1/2 hidden w-px bg-nuit-900/8 lg:block" />
+        <div className="absolute inset-0 vignettage" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-b from-transparent to-papier-100" />
       </div>
 
       {/* Letterboxing : deux bandes sombres qui encadrent la scène et
@@ -103,7 +107,7 @@ export default function HomeHero() {
 
       <motion.div
         style={{ y: contenuY, opacity: contenuOpacite }}
-        className="relative z-10 mx-auto grid w-full max-w-6xl gap-14 px-4 pb-24 pt-24 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16 lg:px-8 lg:pb-32 lg:pt-32"
+        className="relative z-10 mx-auto grid w-full max-w-6xl gap-11 px-4 pb-20 pt-20 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-14 lg:px-8 lg:pb-26 lg:pt-26"
       >
         <div>
           <motion.p
@@ -115,7 +119,7 @@ export default function HomeHero() {
             {garageInfo.name} — depuis toujours à {garageInfo.address.city}
           </motion.p>
 
-          <h1 className="titre-scene mt-6 text-[3rem] text-nuit-950 sm:text-7xl lg:text-[5.5rem]">
+          <h1 className="titre-scene mt-5 text-[3rem] text-nuit-950 sm:text-7xl lg:text-[5.5rem]">
             <motion.span
               className="block"
               initial={{ opacity: 0, y: 40 }}
@@ -140,7 +144,7 @@ export default function HomeHero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 1.3, ease: EASE_CINEMA }}
-            className="mt-8 max-w-xl text-base leading-relaxed text-acier-600 sm:text-lg"
+            className="mt-7 max-w-xl text-base leading-relaxed text-acier-600 sm:text-lg"
           >
             {garageInfo.intro}
           </motion.p>
@@ -149,11 +153,11 @@ export default function HomeHero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 1.42, ease: EASE_CINEMA }}
-            className="mt-10 flex flex-wrap items-center gap-4"
+            className="mt-9 flex flex-wrap items-center gap-4"
           >
             <Link
               href="/voitures"
-              className="group inline-flex items-center gap-3 rounded-full bg-nuit-950 px-7 py-4 text-sm font-semibold text-white transition-colors hover:bg-flamme-600"
+              className="group inline-flex items-center gap-3 bg-nuit-950 px-7 py-4 text-sm font-semibold text-white transition-colors hover:bg-flamme-700"
             >
               Découvrir nos occasions
               <span
@@ -181,7 +185,7 @@ export default function HomeHero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.6, ease: EASE_CINEMA }}
-            className="mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-nuit-900/15 pt-6"
+            className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-nuit-900/15 pt-6"
           >
             {CHIFFRES.map((chiffre) => (
               <div key={chiffre.label}>
