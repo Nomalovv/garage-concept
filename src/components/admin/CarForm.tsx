@@ -138,25 +138,38 @@ export default function CarForm({
     };
   }, [values.brand, values.model]);
 
-  const brandOptions = liveBrands ?? carBrands();
+  // Fusionne API live (véhicules neufs actuels) et catalogue local (couvre
+  // aussi l'ancien, absent de l'ADEME) plutôt que de faire primer l'un sur
+  // l'autre, sinon les modèles anciens disparaissent dès que l'API répond.
+  function mergeUnique(a: string[], b: string[]): string[] {
+    const merged = new Map<string, string>();
+    [...a, ...b].forEach((name) => merged.set(name.toLowerCase(), name));
+    return Array.from(merged.values()).sort((x, y) => x.localeCompare(y, "fr"));
+  }
+
+  const brandOptions = mergeUnique(carBrands(), liveBrands ?? []);
   const modelOptionsForBrand = values.brand.trim()
-    ? liveModels &&
-      liveModels.brand.localeCompare(values.brand.trim(), "fr", {
-        sensitivity: "base",
-      }) === 0
-      ? liveModels.models
-      : carModelsForBrand(values.brand)
+    ? mergeUnique(
+        carModelsForBrand(values.brand),
+        liveModels &&
+          liveModels.brand.localeCompare(values.brand.trim(), "fr", {
+            sensitivity: "base",
+          }) === 0
+          ? liveModels.models
+          : [],
+      )
     : [];
   const trimKey = `${values.brand.trim()}|${values.model.trim()}`;
   const trimOptions = liveTrims && liveTrims.key === trimKey ? liveTrims.trims : [];
 
-  // La marque/modèle changeant, l'ancienne motorisation (et tout ce qui en
-  // découle) ne correspond plus au véhicule : on l'efface pour éviter une
-  // incohérence du type "Clio" avec un moteur d'A110 laissé par erreur.
+  // La marque (ou le modèle) changeant, tout ce qui en découlait ne
+  // correspond plus au véhicule : on l'efface pour éviter une incohérence du
+  // type "Renault" avec le modèle "208" ou un moteur d'A110 laissés en place.
   function updateBrandOrModel(key: "brand" | "model", value: string) {
     setValues((current) => ({
       ...current,
       [key]: value,
+      ...(key === "brand" ? { model: "" } : {}),
       trim: "",
       engine: "",
       powerKw: "",
