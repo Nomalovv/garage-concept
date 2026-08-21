@@ -124,7 +124,7 @@ function CarView({ id }: { id: string }) {
           <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-nuit-100 bg-nuit-50">
             {cover ? (
               <Image
-                src={cover.url}
+                src={cover}
                 alt={`${car.brand} ${car.model}`}
                 fill
                 sizes="(min-width: 1024px) 640px, 100vw"
@@ -147,7 +147,7 @@ function CarView({ id }: { id: string }) {
             <div className="grid grid-cols-4 gap-3 sm:grid-cols-6">
               {car.images.map((image, index) => (
                 <button
-                  key={image.url}
+                  key={image}
                   type="button"
                   onClick={() => setActiveImage(index)}
                   aria-label={`Afficher la photo ${index + 1}`}
@@ -159,7 +159,7 @@ function CarView({ id }: { id: string }) {
                   }`}
                 >
                   <Image
-                    src={image.url}
+                    src={image}
                     alt=""
                     fill
                     sizes="120px"

@@ -2,11 +2,6 @@ export type Fuel = "essence" | "diesel" | "hybride" | "electrique";
 
 export type Transmission = "manuelle" | "automatique";
 
-export interface CarImage {
-  url: string;
-  path: string;
-}
-
 export interface Car {
   id: string;
   brand: string;
@@ -17,7 +12,7 @@ export interface Car {
   fuel: Fuel;
   transmission: Transmission;
   description: string;
-  images: CarImage[];
+  images: string[];
   sold: boolean;
   createdAt: number | null;
 }

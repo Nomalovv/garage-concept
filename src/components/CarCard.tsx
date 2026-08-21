@@ -14,7 +14,7 @@ export default function CarCard({ car }: { car: Car }) {
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-nuit-50">
         {cover ? (
           <Image
-            src={cover.url}
+            src={cover}
             alt={`${car.brand} ${car.model}`}
             fill
             sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 90vw"

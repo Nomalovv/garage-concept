@@ -12,14 +12,8 @@ import {
   updateDoc,
   type DocumentData,
 } from "firebase/firestore";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
-import { getDb, getFirebaseStorage } from "@/lib/firebase";
-import type { Car, CarImage, CarInput, Fuel, Transmission } from "@/types";
+import { getDb } from "@/lib/firebase";
+import type { Car, CarInput, Fuel, Transmission } from "@/types";
 
 const COLLECTION = "cars";
 
@@ -30,16 +24,11 @@ function toNumber(value: unknown, fallback = 0): number {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
-function toImages(value: unknown): CarImage[] {
+function toImages(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
-  return value
-    .filter(
-      (item): item is CarImage =>
-        typeof item === "object" &&
-        item !== null &&
-        typeof (item as CarImage).url === "string",
-    )
-    .map((item) => ({ url: item.url, path: item.path ?? "" }));
+  return value.filter(
+    (item): item is string => typeof item === "string" && item.trim() !== "",
+  );
 }
 
 function mapCar(id: string, data: DocumentData): Car {
@@ -62,45 +51,6 @@ function mapCar(id: string, data: DocumentData): Car {
     createdAt:
       data.createdAt instanceof Timestamp ? data.createdAt.toMillis() : null,
   };
-}
-
-function storagePath(carId: string, file: File, index: number): string {
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").toLowerCase();
-  return `cars/${carId}/${Date.now()}-${index}-${safeName}`;
-}
-
-async function uploadImages(
-  carId: string,
-  files: File[],
-): Promise<CarImage[]> {
-  if (files.length === 0) return [];
-  const storage = getFirebaseStorage();
-  if (!storage) throw new Error("Firebase Storage n'est pas configuré.");
-
-  return Promise.all(
-    files.map(async (file, index) => {
-      const path = storagePath(carId, file, index);
-      const fileRef = ref(storage, path);
-      await uploadBytes(fileRef, file, { contentType: file.type });
-      const url = await getDownloadURL(fileRef);
-      return { url, path };
-    }),
-  );
-}
-
-async function removeImages(images: CarImage[]): Promise<void> {
-  const storage = getFirebaseStorage();
-  if (!storage) return;
-  await Promise.all(
-    images.map(async (image) => {
-      if (!image.path) return;
-      try {
-        await deleteObject(ref(storage, image.path));
-      } catch {
-        // Le fichier a déjà été supprimé côté Storage : rien à faire.
-      }
-    }),
-  );
 }
 
 export async function fetchCars(): Promise<Car[]> {
@@ -131,40 +81,33 @@ export async function fetchCar(id: string): Promise<Car | null> {
 
 export async function createCar(
   input: CarInput,
-  files: File[],
+  images: string[],
 ): Promise<string> {
   const db = getDb();
   if (!db) throw new Error("Firebase n'est pas configuré.");
 
   const created = await addDoc(collection(db, COLLECTION), {
     ...input,
-    images: [],
+    images,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
-
-  const images = await uploadImages(created.id, files);
-  if (images.length > 0) {
-    await updateDoc(created, { images });
-  }
   return created.id;
 }
 
 export async function updateCar(
   id: string,
   input: CarInput,
-  images: { kept: CarImage[]; removed: CarImage[]; added: File[] },
+  images: string[],
 ): Promise<void> {
   const db = getDb();
   if (!db) throw new Error("Firebase n'est pas configuré.");
 
-  const uploaded = await uploadImages(id, images.added);
   await updateDoc(doc(db, COLLECTION, id), {
     ...input,
-    images: [...images.kept, ...uploaded],
+    images,
     updatedAt: serverTimestamp(),
   });
-  await removeImages(images.removed);
 }
 
 export async function setCarSold(id: string, sold: boolean): Promise<void> {
@@ -176,6 +119,5 @@ export async function setCarSold(id: string, sold: boolean): Promise<void> {
 export async function deleteCar(car: Car): Promise<void> {
   const db = getDb();
   if (!db) throw new Error("Firebase n'est pas configuré.");
-  await removeImages(car.images);
   await deleteDoc(doc(db, COLLECTION, car.id));
 }

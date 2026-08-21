@@ -5,8 +5,11 @@ prestations d'entretien et espace administrateur pour gérer le contenu.
 
 - **Framework** : Next.js 16 (App Router, TypeScript, Turbopack)
 - **Style** : Tailwind CSS v4
-- **Données** : Firebase — Firestore (voitures & prestations), Storage (photos),
-  Auth e-mail/mot de passe (espace admin)
+- **Données** : Firebase — Firestore (voitures & prestations) et Auth
+  e-mail/mot de passe (espace admin). Les photos ne sont pas hébergées sur
+  Firebase : l'admin colle un lien vers une image déjà hébergée ailleurs
+  (Imgur, Cloudinary…), ce qui évite de dépendre du forfait payant Firebase
+  Storage.
 - **Hébergement** : GitHub Pages via un export statique (`output: "export"`)
 
 ## Structure du site
@@ -49,8 +52,10 @@ Scripts disponibles :
 ## Configuration Firebase
 
 1. Créer un projet sur [console.firebase.google.com](https://console.firebase.google.com).
-2. Activer **Authentication** (fournisseur « E-mail/Mot de passe »), **Firestore
-   Database** et **Storage**.
+2. Activer **Authentication** (fournisseur « E-mail/Mot de passe ») et
+   **Firestore Database** (mode production). Storage n'est **pas** nécessaire
+   (il exige le forfait payant Blaze) : les photos sont de simples URL
+   collées dans le formulaire admin.
 3. Créer une application Web dans les paramètres du projet et copier la config.
 4. Renseigner `.env.local` à partir de `.env.local.example` :
 
@@ -58,17 +63,16 @@ Scripts disponibles :
    NEXT_PUBLIC_FIREBASE_API_KEY=…
    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=…
    NEXT_PUBLIC_FIREBASE_PROJECT_ID=…
-   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=…
    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=…
    NEXT_PUBLIC_FIREBASE_APP_ID=…
    ```
 
 5. Créer un utilisateur (e-mail + mot de passe) dans Authentication : c'est le
    compte administrateur du site.
-6. Déployer les règles de sécurité :
+6. Déployer les règles de sécurité Firestore :
 
    ```bash
-   firebase deploy --only firestore:rules,storage:rules
+   firebase deploy --only firestore:rules
    ```
 
 Tant que ces variables ne sont pas renseignées, le site fonctionne mais affiche
@@ -80,13 +84,12 @@ base (bouton « Importer les prestations par défaut » dans `/admin/services`).
 
 - Collection `cars` : `brand`, `model`, `year`, `price`, `mileage`, `fuel`
   (`essence` | `diesel` | `hybride` | `electrique`), `transmission`
-  (`manuelle` | `automatique`), `description`, `images` (`[{ url, path }]`),
+  (`manuelle` | `automatique`), `description`, `images` (tableau d'URL),
   `sold`, `createdAt`, `updatedAt`.
 - Collection `services` : `name`, `description`, `price`, `icon`, `order`.
-- Storage : les photos sont enregistrées sous `cars/{carId}/…`.
 
 Lecture publique, écriture réservée aux utilisateurs authentifiés
-(`firestore.rules`, `storage.rules`).
+(`firestore.rules`).
 
 ## Déploiement GitHub Pages
 
@@ -94,7 +97,7 @@ Le workflow `.github/workflows/deploy.yml` construit le site et publie `out/` à
 chaque push sur `main`.
 
 1. Dans le dépôt GitHub : `Settings > Pages` → source **GitHub Actions**.
-2. Dans `Settings > Secrets and variables > Actions`, créer les six secrets
+2. Dans `Settings > Secrets and variables > Actions`, créer les cinq secrets
    `NEXT_PUBLIC_FIREBASE_*` avec les mêmes valeurs que `.env.local`.
 3. Dans la console Firebase, ajouter le domaine GitHub Pages
    (`<utilisateur>.github.io`) aux **domaines autorisés** d'Authentication.

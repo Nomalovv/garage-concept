@@ -88,7 +88,7 @@ export default function AdminCarsPage() {
   return (
     <AdminShell
       title="Gestion des véhicules"
-      description="Ajoutez, modifiez ou retirez les véhicules affichés sur le site. Les photos sont stockées sur Firebase Storage."
+      description="Ajoutez, modifiez ou retirez les véhicules affichés sur le site. Les photos sont des liens vers des images hébergées ailleurs."
     >
       {!isFirebaseConfigured ? (
         <ConfigNotice />
@@ -139,7 +139,7 @@ export default function AdminCarsPage() {
                   <div className="relative h-24 w-full shrink-0 overflow-hidden rounded-lg bg-nuit-50 sm:w-36">
                     {car.images[0] ? (
                       <Image
-                        src={car.images[0].url}
+                        src={car.images[0]}
                         alt=""
                         fill
                         sizes="144px"

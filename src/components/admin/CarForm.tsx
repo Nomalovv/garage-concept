@@ -1,14 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { Spinner } from "@/components/StateMessage";
 import { createCar, updateCar } from "@/lib/cars";
 import {
   FUEL_LABELS,
   TRANSMISSION_LABELS,
   type Car,
-  type CarImage,
   type CarInput,
   type Fuel,
   type Transmission,
@@ -54,35 +53,24 @@ export default function CarForm({
   onSaved: () => void;
 }) {
   const [values, setValues] = useState<FormValues>(() => initialValues(car));
-  const [keptImages, setKeptImages] = useState<CarImage[]>(car?.images ?? []);
-  const [removedImages, setRemovedImages] = useState<CarImage[]>([]);
-  const [files, setFiles] = useState<File[]>([]);
+  const [images, setImages] = useState<string[]>(car?.images ?? []);
+  const [newImageUrl, setNewImageUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Aperçus locaux des fichiers sélectionnés, libérés dès qu'ils changent.
-  const previews = useMemo(
-    () => files.map((file) => URL.createObjectURL(file)),
-    [files],
-  );
-
-  useEffect(() => {
-    return () => {
-      previews.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [previews]);
 
   function update<K extends keyof FormValues>(key: K, value: FormValues[K]) {
     setValues((current) => ({ ...current, [key]: value }));
   }
 
-  function removeExistingImage(image: CarImage) {
-    setKeptImages((current) => current.filter((item) => item.url !== image.url));
-    setRemovedImages((current) => [...current, image]);
+  function addImageUrl() {
+    const url = newImageUrl.trim();
+    if (!url) return;
+    setImages((current) => [...current, url]);
+    setNewImageUrl("");
   }
 
-  function removeNewFile(index: number) {
-    setFiles((current) => current.filter((_, position) => position !== index));
+  function removeImage(index: number) {
+    setImages((current) => current.filter((_, position) => position !== index));
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -109,13 +97,9 @@ export default function CarForm({
     setSubmitting(true);
     try {
       if (car) {
-        await updateCar(car.id, input, {
-          kept: keptImages,
-          removed: removedImages,
-          added: files,
-        });
+        await updateCar(car.id, input, images);
       } else {
-        await createCar(input, files);
+        await createCar(input, images);
       }
       onSaved();
     } catch (cause) {
@@ -273,36 +257,46 @@ export default function CarForm({
       </div>
 
       <div className="space-y-3">
-        <label className={labelClass} htmlFor="photos">
-          Photos
+        <label className={labelClass} htmlFor="photo-url">
+          Photos (URL)
         </label>
-        <input
-          id="photos"
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={(event) =>
-            setFiles((current) => [
-              ...current,
-              ...Array.from(event.target.files ?? []),
-            ])
-          }
-          className="block w-full text-sm text-acier-600 file:mr-4 file:rounded-md file:border-0 file:bg-nuit-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-nuit-800"
-        />
+        <div className="flex gap-2">
+          <input
+            id="photo-url"
+            type="url"
+            value={newImageUrl}
+            onChange={(event) => setNewImageUrl(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                addImageUrl();
+              }
+            }}
+            placeholder="https://…"
+            className={fieldClass}
+          />
+          <button
+            type="button"
+            onClick={addImageUrl}
+            className="shrink-0 rounded-md border border-nuit-200 px-4 py-2 text-sm font-semibold text-nuit-900 hover:bg-nuit-50"
+          >
+            Ajouter
+          </button>
+        </div>
         <p className="text-xs text-acier-400">
-          Formats image uniquement, 10 Mo maximum par fichier. La première photo
-          sert de vignette.
+          Collez le lien d&apos;une photo déjà hébergée (Imgur, Cloudinary…).
+          La première photo sert de vignette.
         </p>
 
-        {keptImages.length > 0 || previews.length > 0 ? (
+        {images.length > 0 ? (
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
-            {keptImages.map((image) => (
+            {images.map((url, index) => (
               <div
-                key={image.url}
+                key={url}
                 className="relative aspect-square overflow-hidden rounded-lg border border-nuit-100"
               >
                 <Image
-                  src={image.url}
+                  src={url}
                   alt=""
                   fill
                   sizes="120px"
@@ -310,38 +304,12 @@ export default function CarForm({
                 />
                 <button
                   type="button"
-                  onClick={() => removeExistingImage(image)}
-                  aria-label="Supprimer cette photo"
+                  onClick={() => removeImage(index)}
+                  aria-label="Retirer cette photo"
                   className="absolute right-1 top-1 rounded-full bg-nuit-900/80 px-2 py-0.5 text-xs font-semibold text-white"
                 >
                   ✕
                 </button>
-              </div>
-            ))}
-            {previews.map((preview, index) => (
-              <div
-                key={preview}
-                className="relative aspect-square overflow-hidden rounded-lg border border-flamme-600"
-              >
-                <Image
-                  src={preview}
-                  alt=""
-                  fill
-                  sizes="120px"
-                  className="object-cover"
-                  unoptimized
-                />
-                <button
-                  type="button"
-                  onClick={() => removeNewFile(index)}
-                  aria-label="Retirer ce fichier"
-                  className="absolute right-1 top-1 rounded-full bg-nuit-900/80 px-2 py-0.5 text-xs font-semibold text-white"
-                >
-                  ✕
-                </button>
-                <span className="absolute bottom-0 left-0 right-0 bg-flamme-600 py-0.5 text-center text-[10px] font-semibold uppercase text-white">
-                  Nouvelle
-                </span>
               </div>
             ))}
           </div>
