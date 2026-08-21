@@ -21,6 +21,7 @@ prestations d'entretien et espace administrateur pour gérer le contenu.
 | `/voitures/detail?id=…`  | Fiche d'un véhicule (galerie photos, caractéristiques, contact)          |
 | `/services`              | Toutes les prestations de l'atelier + engagements du garage             |
 | `/contact`               | Coordonnées, horaires et plan d'accès                                   |
+| `/mentions-legales`      | Éditeur, hébergement, propriété intellectuelle, données personnelles   |
 | `/admin`                 | Connexion à l'espace administrateur (Firebase Auth)                     |
 | `/admin/voitures`        | Ajout / modification / vendu / suppression des véhicules et des photos  |
 | `/admin/services`        | Ajout / modification / suppression des prestations                      |
@@ -156,3 +157,10 @@ images libres de droit dans `public/images/` — sources et licences détaillée
 dans `public/images/CREDITS.md`. Elles peuvent être remplacées par de vraies
 photos de l'atelier en conservant les mêmes noms de fichiers (les imports
 statiques sont centralisés dans `src/lib/photos.ts`).
+
+La page `/mentions-legales` (obligatoire pour un site professionnel en
+France, LCEN art. 6-III) lit `garageInfo.legal` (`legalForm`, `capitalSocial`,
+`rcsCity`, `vatNumber`) en plus des champs déjà présents (adresse, SIRET,
+contact) — valeurs fictives à remplacer par les vraies informations de
+l'entreprise, `capitalSocial` et `vatNumber` pouvant être laissés vides si
+non applicables.

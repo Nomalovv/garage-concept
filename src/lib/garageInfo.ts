@@ -18,6 +18,17 @@ export const garageInfo = {
     { days: "Dimanche", value: "Fermé" },
   ],
   siret: "000 000 000 00000",
+  // Champs requis par les mentions légales (LCEN art. 6-III) mais absents
+  // des autres pages du site. Valeurs fictives comme le reste de
+  // `garageInfo` : à remplacer par les vraies informations de l'entreprise.
+  legal: {
+    legalForm: "SARL",
+    // Laisser vide ("") si non applicable (ex. entreprise individuelle).
+    capitalSocial: "10 000 €",
+    rcsCity: "Caen",
+    // Laisser vide ("") si l'entreprise n'est pas assujettie à la TVA.
+    vatNumber: "FR00 000000000",
+  },
 } as const;
 
 export const fullAddress = `${garageInfo.address.street}, ${garageInfo.address.postalCode} ${garageInfo.address.city}`;

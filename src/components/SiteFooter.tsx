@@ -58,9 +58,14 @@ export default function SiteFooter() {
             © {new Date().getFullYear()} {garageInfo.name} — SIRET{" "}
             {garageInfo.siret}
           </p>
-          <Link href="/admin" className="hover:text-nuit-100">
-            Espace administrateur
-          </Link>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <Link href="/mentions-legales" className="hover:text-nuit-100">
+              Mentions légales
+            </Link>
+            <Link href="/admin" className="hover:text-nuit-100">
+              Espace administrateur
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
