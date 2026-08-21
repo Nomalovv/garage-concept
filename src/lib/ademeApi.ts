@@ -16,6 +16,30 @@ export interface AdemeTrim {
   fuel: Fuel | null;
   bodyType: BodyType | null;
   transmission: "manuelle" | "automatique" | null;
+  doors: number | null;
+  seats: number | null;
+}
+
+// L'ADEME ne fournit ni portes ni places (base centrée conso/CO2). On propose
+// donc une valeur par défaut plausible selon la carrosserie — à corriger par
+// l'admin si besoin, pas une donnée officielle comme le reste.
+const DOORS_SEATS_BY_BODY_TYPE: Record<BodyType, { doors: number; seats: number }> = {
+  citadine: { doors: 5, seats: 5 },
+  berline: { doors: 4, seats: 5 },
+  break: { doors: 5, seats: 5 },
+  suv: { doors: 5, seats: 5 },
+  monospace: { doors: 5, seats: 7 },
+  coupe: { doors: 2, seats: 4 },
+  cabriolet: { doors: 2, seats: 4 },
+  utilitaire: { doors: 5, seats: 3 },
+};
+
+function estimateDoorsSeats(bodyType: BodyType | null): {
+  doors: number | null;
+  seats: number | null;
+} {
+  if (!bodyType) return { doors: null, seats: null };
+  return DOORS_SEATS_BY_BODY_TYPE[bodyType];
 }
 
 function mapFuel(energie: unknown): Fuel | null {
@@ -127,13 +151,15 @@ export async function fetchAdemeTrims(
       const co2Min = numberField(line, "CO2_vitesse_mixte_Min");
       const co2Max = numberField(line, "CO2_vitesse_mixte_Max");
       const co2 = co2Min !== null && co2Max !== null ? Math.round((co2Min + co2Max) / 2) : 0;
+      const bodyType = mapBodyType(line["Carrosserie"]);
       trims.push({
         label,
         powerKw: numberField(line, "Puissance_maximale") ?? 0,
         co2,
         fuel: mapFuel(line["Energie"]),
-        bodyType: mapBodyType(line["Carrosserie"]),
+        bodyType,
         transmission: mapTransmission(line["Type_de_boite"]),
+        ...estimateDoorsSeats(bodyType),
       });
     }
     return trims;

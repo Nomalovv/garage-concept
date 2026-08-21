@@ -160,6 +160,8 @@ export default function CarForm({
       fuel: match.fuel ?? current.fuel,
       bodyType: match.bodyType ?? current.bodyType,
       transmission: match.transmission ?? current.transmission,
+      doors: match.doors ? String(match.doors) : current.doors,
+      seats: match.seats ? String(match.seats) : current.seats,
     }));
   }
 
@@ -311,7 +313,9 @@ export default function CarForm({
           {trimOptions.length > 0 ? (
             <p className="mt-1 text-xs text-acier-400">
               Choisissez une version suggérée (base ADEME) pour pré-remplir
-              puissance, CO2, carburant, carrosserie et boîte.
+              puissance, CO2, carburant, carrosserie et boîte. Portes/places
+              sont alors estimées selon la carrosserie (à corriger si besoin,
+              l&apos;ADEME ne fournit pas cette donnée).
             </p>
           ) : null}
         </div>
