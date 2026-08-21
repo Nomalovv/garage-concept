@@ -528,7 +528,7 @@ export default function CarForm({
           <input
             id="year"
             type="number"
-            min="1950"
+            min="1900"
             max={currentYear}
             required
             value={values.year}
