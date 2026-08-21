@@ -54,33 +54,26 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Scène 02 — l'appel direct (plan de contraste sombre) */}
-      <section className="relative overflow-hidden bg-nuit-950 text-white">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 reglure-sombre opacity-70"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-b from-flamme-700/35 via-transparent to-transparent"
-        />
-        <div className="relative mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      {/* Scène 02 — l'appel direct (reste dans le registre clair : la scène
+          sombre juste avant le footer, lui aussi sombre, fondait les deux
+          blocs l'un dans l'autre). */}
+      <section className="border-t border-nuit-900/10 bg-papier-100">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <SceneHeading
             number="02"
             label="L'appel direct"
-            tone="sombre"
             title={
               <>
                 Le plus rapide,
                 <br />
-                <span className="text-flamme-500">c&apos;est le téléphone</span>
+                <span className="text-flamme-600">c&apos;est le téléphone</span>
               </>
             }
             description="Un mécanicien vous répond pendant les heures d'ouverture et vous propose un créneau, souvent dans la journée."
           />
 
           <Reveal delay={0.1} className="mt-10">
-            <div className="flex flex-wrap items-center gap-4 border-t border-white/20 pt-8">
+            <div className="flex flex-wrap items-center gap-4 border-t border-nuit-900/15 pt-8">
               <a
                 href={`tel:${garageInfo.phone}`}
                 className="inline-flex items-center gap-3 bg-flamme-600 px-7 py-4 text-base font-bold text-white transition-colors hover:bg-flamme-700"
@@ -90,7 +83,7 @@ export default function ContactPage() {
               </a>
               <a
                 href={`mailto:${garageInfo.email}`}
-                className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 text-sm font-semibold text-white transition-colors hover:border-flamme-500 hover:text-flamme-500"
+                className="group inline-flex items-center gap-2 border-b border-nuit-900/30 pb-1 text-sm font-semibold text-nuit-900 transition-colors hover:border-flamme-600 hover:text-flamme-600"
               >
                 {garageInfo.email}
                 <span
