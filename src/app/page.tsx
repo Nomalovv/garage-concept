@@ -4,9 +4,11 @@ import FeaturedCars from "@/components/FeaturedCars";
 import HomeHero from "@/components/HomeHero";
 import PlancheAtelier from "@/components/PlancheAtelier";
 import Reveal from "@/components/Reveal";
+import ReviewsCarousel from "@/components/ReviewsCarousel";
 import SceneHeading from "@/components/SceneHeading";
 import ServicesGrid from "@/components/ServicesGrid";
-import { garageInfo, strengths, testimonials } from "@/lib/garageInfo";
+import { garageInfo, strengths } from "@/lib/garageInfo";
+import { getReviews } from "@/lib/googleReviews";
 
 /** Bandeau défilant façon générique de film, alimenté par nos points forts. */
 function BandeauDefilant() {
@@ -38,7 +40,10 @@ function BandeauDefilant() {
   );
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Résolu à la génération statique : la clé Google reste côté serveur/build.
+  const reviews = await getReviews();
+
   return (
     <>
       {/* Scène 00 — bandeau d'ouverture */}
@@ -153,7 +158,7 @@ export default function HomePage() {
       </section>
 
       {/* Scène 04 — les témoignages */}
-      <section className="bg-papier-50">
+      <section id="avis" className="bg-papier-50">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <SceneHeading
             number="04"
@@ -167,40 +172,9 @@ export default function HomePage() {
             }
           />
 
-          <div className="mt-12 grid gap-10 md:grid-cols-3">
-            {testimonials.map((review, index) => (
-              <Reveal key={review.name} delay={index * 0.1}>
-                <figure className="flex h-full flex-col border-t border-nuit-900/15 pt-6">
-                  <span
-                    aria-hidden="true"
-                    className="titre-scene text-5xl leading-none text-flamme-600"
-                  >
-                    &ldquo;
-                  </span>
-                  <blockquote className="mt-4 flex-1 text-base leading-relaxed text-nuit-900">
-                    {review.text}
-                  </blockquote>
-                  <figcaption className="mt-6">
-                    <div
-                      className="text-flamme-600"
-                      aria-label={`Note de ${review.rating} sur 5`}
-                    >
-                      {"★".repeat(review.rating)}
-                      <span className="text-papier-400">
-                        {"★".repeat(5 - review.rating)}
-                      </span>
-                    </div>
-                    <p className="titre-scene mt-2 text-lg text-nuit-950">
-                      {review.name}
-                    </p>
-                    <p className="repere-scene mt-1 text-acier-600">
-                      {review.city}
-                    </p>
-                  </figcaption>
-                </figure>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={0.1} className="mt-12">
+            <ReviewsCarousel {...reviews} />
+          </Reveal>
         </div>
       </section>
 

@@ -36,6 +36,9 @@
   /* Mouvement d'ambiance (bandeau défilant du générique) */
   --animate-defile: defile 42s linear infinite;
 
+  /* Même mouvement, ralenti pour le bandeau d'avis (cartes plus larges). */
+  --animate-defile-avis: defile 72s linear infinite;
+
   @keyframes defile {
     from {
       transform: translate3d(0, 0, 0);
@@ -148,6 +151,22 @@ body {
   animation: var(--animate-defile);
 }
 
+/* Bandeau des avis clients : même principe de piste dupliquée, mais l'espace
+   entre les cartes est porté par les cartes elles-mêmes (padding) et non par
+   un `gap` sur la piste, sinon la translation de -50 % ne tomberait plus juste
+   et la boucle sauterait. */
+.piste-avis {
+  display: flex;
+  width: max-content;
+  animation: var(--animate-defile-avis);
+}
+
+/* Pause à la lecture : survol souris, ou focus clavier posé dans le cadre. */
+.cadre-avis:hover .piste-avis,
+.cadre-avis:focus-within .piste-avis {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -155,6 +174,20 @@ body {
 
   .piste-defilante {
     animation: none;
+  }
+
+  /* Sans animation, le cadre devient un simple défilement horizontal manuel,
+     et le doublon de la boucle n'a plus lieu d'être affiché. */
+  .piste-avis {
+    animation: none;
+  }
+
+  .cadre-avis {
+    overflow-x: auto;
+  }
+
+  .doublon-avis {
+    display: none;
   }
 
   *,
