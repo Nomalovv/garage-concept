@@ -150,8 +150,35 @@ export default function CarForm({
   const trimKey = `${values.brand.trim()}|${values.model.trim()}`;
   const trimOptions = liveTrims && liveTrims.key === trimKey ? liveTrims.trims : [];
 
+  // La marque/modèle changeant, l'ancienne motorisation (et tout ce qui en
+  // découle) ne correspond plus au véhicule : on l'efface pour éviter une
+  // incohérence du type "Clio" avec un moteur d'A110 laissé par erreur.
+  function updateBrandOrModel(key: "brand" | "model", value: string) {
+    setValues((current) => ({
+      ...current,
+      [key]: value,
+      trim: "",
+      engine: "",
+      powerKw: "",
+      co2: "",
+      fuel: "essence",
+      bodyType: "berline",
+      transmission: "manuelle",
+      doors: "5",
+      seats: "5",
+    }));
+  }
+
+  function trimDisplayLabel(option: AdemeTrim): string {
+    return option.fuel
+      ? `${option.label} — ${FUEL_LABELS[option.fuel]}`
+      : option.label;
+  }
+
   function applyTrim(label: string) {
-    const match = trimOptions.find((option) => option.label === label);
+    const match = trimOptions.find(
+      (option) => trimDisplayLabel(option) === label,
+    );
     if (!match) return;
     setValues((current) => ({
       ...current,
@@ -253,7 +280,7 @@ export default function CarForm({
             required
             list="brand-options"
             value={values.brand}
-            onChange={(event) => update("brand", event.target.value)}
+            onChange={(event) => updateBrandOrModel("brand", event.target.value)}
             className={fieldClass}
           />
           <datalist id="brand-options">
@@ -271,7 +298,7 @@ export default function CarForm({
             required
             list="model-options"
             value={values.model}
-            onChange={(event) => update("model", event.target.value)}
+            onChange={(event) => updateBrandOrModel("model", event.target.value)}
             className={fieldClass}
           />
           <datalist id="model-options">
@@ -307,7 +334,7 @@ export default function CarForm({
           />
           <datalist id="engine-options">
             {trimOptions.map((option) => (
-              <option key={option.label} value={option.label} />
+              <option key={option.label} value={trimDisplayLabel(option)} />
             ))}
           </datalist>
           {trimOptions.length > 0 ? (
