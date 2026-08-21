@@ -5,6 +5,7 @@ import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import SceneHeading from "@/components/SceneHeading";
 import { garageInfo } from "@/lib/garageInfo";
+import { photos } from "@/lib/photos";
 
 export const metadata: Metadata = {
   title: "Nos voitures d'occasion",
@@ -31,6 +32,7 @@ export default function CarsPage() {
           { label: "Contrôle", value: "100 pts" },
           { label: "Carnet", value: "Complet" },
         ]}
+        photo={photos.pontElevateur}
       />
 
       {/* Scène 01 — le catalogue complet */}

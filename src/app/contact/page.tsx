@@ -4,6 +4,7 @@ import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import SceneHeading from "@/components/SceneHeading";
 import { fullAddress, garageInfo } from "@/lib/garageInfo";
+import { photos } from "@/lib/photos";
 
 export const metadata: Metadata = {
   title: "Contact et accès",
@@ -29,6 +30,7 @@ export default function ContactPage() {
           { label: "Du lundi au vendredi", value: "08h — 18h30" },
           { label: "Samedi", value: "09h — 17h" },
         ]}
+        photo={photos.etabliOutils}
       />
 
       {/* Scène 01 — les coordonnées et le plan d'accès */}

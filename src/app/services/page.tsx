@@ -5,6 +5,7 @@ import Reveal from "@/components/Reveal";
 import SceneHeading from "@/components/SceneHeading";
 import ServicesGrid from "@/components/ServicesGrid";
 import { garageInfo, strengths } from "@/lib/garageInfo";
+import { photos } from "@/lib/photos";
 
 export const metadata: Metadata = {
   title: "Nos services",
@@ -31,6 +32,7 @@ export default function ServicesPage() {
           { label: "Marques", value: "Toutes" },
           { label: "Véhicule de prêt", value: "Offert" },
         ]}
+        photo={photos.mecanicienMoteur}
       />
 
       {/* Scène 01 — le catalogue de prestations */}

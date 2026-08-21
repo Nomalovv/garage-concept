@@ -1,6 +1,8 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import Reveal from "@/components/Reveal";
 import { garageInfo } from "@/lib/garageInfo";
+import type { Photo } from "@/lib/photos";
 
 type PageHeroProps = {
   /** Texte du claquet, affiché à gauche dans la bande sombre. */
@@ -11,13 +13,17 @@ type PageHeroProps = {
   description?: ReactNode;
   /** Chiffres clés alignés sous le titre (facultatif). */
   facts?: { label: string; value: string }[];
+  /** Plan de l'atelier tiré à côté du titre (facultatif). */
+  photo?: Photo;
 };
 
 /**
  * Ouverture des pages intérieures : bande de letterboxing façon claquet, fond
  * papier texturé (réglure + vignettage, pas de halo flou), puis grand titre en
- * serif éditoriale. Pendant que `HomeHero` joue la « scène 00 » de l'accueil,
- * chaque page repart ensuite de « Scène 01 » avec `SceneHeading`.
+ * condensée de signalétique. Quand une `photo` est fournie, elle est tirée à
+ * côté du titre comme une épreuve collée sur la feuille, légende comprise.
+ * Pendant que `HomeHero` joue la « scène 00 » de l'accueil, chaque page repart
+ * ensuite de « Scène 01 » avec `SceneHeading`.
  */
 export default function PageHero({
   slate,
@@ -25,6 +31,7 @@ export default function PageHero({
   title,
   description,
   facts,
+  photo,
 }: PageHeroProps) {
   return (
     <section className="relative isolate overflow-hidden border-b border-nuit-900/10 bg-papier-100">
@@ -45,7 +52,13 @@ export default function PageHero({
         </a>
       </div>
 
-      <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <div
+        className={`mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20 ${
+          photo
+            ? "grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:gap-14"
+            : ""
+        }`}
+      >
         <Reveal>
           <p className="repere-scene text-flamme-600">{eyebrow}</p>
           <h1 className="titre-scene mt-5 text-[2.75rem] text-nuit-950 sm:text-6xl lg:text-7xl">
@@ -69,6 +82,38 @@ export default function PageHero({
             </dl>
           ) : null}
         </Reveal>
+
+        {photo ? (
+          <Reveal delay={0.12}>
+            <figure>
+              <div className="relative aspect-3/2 border border-nuit-900/15">
+                {/* Coins de repérage, comme sur la fiche de rendez-vous. */}
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-px -top-px z-10 h-4 w-4 border-l-2 border-t-2 border-flamme-600"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute -bottom-px -right-px z-10 h-4 w-4 border-b-2 border-r-2 border-flamme-600"
+                />
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 48vw, 100vw"
+                  className={`object-cover grayscale-[0.25] ${
+                    photo.cadrage ?? "object-center"
+                  }`}
+                />
+                <div aria-hidden="true" className="absolute inset-0 vignettage" />
+              </div>
+              <figcaption className="repere-scene mt-3 text-acier-600">
+                {photo.legende}
+              </figcaption>
+            </figure>
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );
