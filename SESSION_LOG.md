@@ -159,3 +159,139 @@ françaises avec template de titre, en-tête et pied de page globaux.
    par défaut » pour créer les 7 prestations en base et pouvoir les modifier.
 10. Personnaliser `src/lib/garageInfo.ts` (adresse, téléphone, e-mail, horaires,
     SIRET, avis clients) — les valeurs actuelles sont fictives.
+
+---
+
+# Session 3 — refonte visuelle « cinématographique », photos, avis Google
+
+Point de départ : le site fonctionnel des sessions 1-2 existait, mais avec un
+habillage visuel très générique (Tailwind par défaut). Objectif de cette
+session : lui donner une identité propre, sans toucher à la logique
+fonctionnelle (Firestore, Auth, formulaires admin).
+
+## 1. Direction artistique « feuille de tournage »
+
+Concept retenu : le site se présente comme un tournage de film — repères
+« Scène 01, 02… » en typo mono espacée (`.repere-scene`), bandeau de
+letterboxing sombre en haut/bas du hero, grands titres en `.titre-scene`,
+séparateurs filaires plutôt que cartes à ombre. Tokens dans
+`src/app/globals.css` (`@theme`) : couleurs `nuit-*` (bleu marine), `flamme-*`
+(accent unique), `papier-*` (fond chaud), `acier-*` (texte secondaire).
+
+Trois itérations ont été nécessaires avant validation client :
+
+1. **V1** : Fraunces (serif) + Geist + orange vif + blobs radiaux flous
+   animés en fond de hero → jugé « fait trop IA » par le client (c'est un
+   pattern visuel très reconnaissable des sites générés/maquettés par IA).
+2. **V2** : police Newsreader + Archivo + IBM Plex Mono, orange désaturé en
+   « rouille d'atelier » (`--color-flamme-*` recalculé), blobs flous
+   supprimés et remplacés par une texture imprimée (`.reglure`, `.reglure-sombre`,
+   `.vignettage` dans `globals.css` — réglure de feuille de service + grain +
+   vignettage, plus de halos flous). Espacement des sections resserré
+   (`py-24/32` → `py-16/24`). Toujours jugé « trop IA » sur la police (le
+   duo serif-variable-élégante + grotesque-humaniste est lui-même devenu un
+   cliché, même sans Fraunces).
+3. **V3 (retenue)** : **Oswald** (titres, condensée capitale façon plaque
+   d'immatriculation/affiche) + **Barlow** (corps, signalétique routière) +
+   IBM Plex Mono inchangée. Rupture volontaire avec le registre « magazine
+   éditorial » au profit d'un registre « atelier / signalétique industrielle ».
+   Oswald n'a pas d'italique dessinée : les accents de titre utilisent
+   uniquement la couleur rouille, plus l'italique.
+
+Couleurs finales : `--color-flamme-700..100` (rouille/oxyde désaturée) dans
+`globals.css`. Palette validée par le client.
+
+## 2. Pages publiques finalisées
+
+Un nouveau composant `src/components/PageHero.tsx` (bandeau claquet + fond
+texturé + titre + éventuelle photo en épreuve) a été créé et appliqué à
+`/services`, `/voitures`, `/contact` (chacune reprend sa numérotation de
+scène à « 01 », indépendante de la home) et `/voitures/detail` (bandeau +
+fond réglé, sans `PageHero` car le titre réel vient de `CarDetail`). Les
+composants fonctionnels (`ServicesGrid`, `CarsBrowser`, `ContactSection`,
+`CarDetail`, `CarCard`, `ServiceCard`, `StateMessage`) ont été réhabillés
+visuellement (filets fins au lieu de coins arrondis/ombres) sans toucher à
+leur logique (filtres, fetch, formulaires).
+
+**Correctif d'enchaînement de fonds** : sur `/voitures` et `/contact`, la
+dernière scène de contenu était en fond sombre (`bg-nuit-950`), collée
+directement au footer — lui aussi sombre — donc les deux blocs se fondaient
+sans transition visible. Repassées en registre clair (comme le fait déjà
+`/services` avec sa 3ᵉ scène), pour finir sur clair → sombre (footer),
+cohérent avec le reste du site.
+
+**Correctif d'alignement** : dans `PageHero`, le libellé d'un « chiffre clé »
+plus long (ex. « Du lundi au vendredi ») passait sur 2 lignes et décalait sa
+valeur vers le bas par rapport aux libellés courts. Fix : `min-h-9` sur le
+`<dt>` pour réserver systématiquement la hauteur de 2 lignes.
+
+## 3. Photos d'atelier
+
+Le site n'avait aucune photo. 8 images libres de droit (**Pexels**, licence
+commerciale sans attribution) ont été ajoutées dans `public/images/` —
+sources et licence détaillées dans `public/images/CREDITS.md`. Intégration :
+fond du `HomeHero` (photo N&B sous voile papier + texture), nouvelle
+« planche contact » `src/components/PlancheAtelier.tsx` (4 plans sous le
+générique défilant de la home), épreuve photo à côté du titre dans
+`PageHero` sur `/services`, `/voitures`, `/contact` (prop `photo` optionnelle).
+
+**Point technique** : le site est en `output: "export"` avec
+`images.unoptimized: true` — `next/image` ne préfixe pas un `src` passé en
+simple chaîne avec le `basePath` GitHub Pages (`/garage-concept`), ce qui
+aurait cassé les images en prod. Les photos sont donc importées statiquement
+via `src/lib/photos.ts` (imports directs des fichiers, pas de chemins en
+dur), ce qui laisse Next résoudre l'URL finale correctement.
+
+## 4. Avis clients : bandeau défilant + branchement Google Places
+
+La section témoignages de la home défile désormais en continu (composant
+`src/components/ReviewsCarousel.tsx`, **CSS pur, Server Component**, même
+principe que `BandeauDefilant` : contenu dupliqué dans le JSX, translation
+`-50%` en boucle sans coupure). Pause au survol/focus
+(`animation-play-state: paused`), repli en défilement manuel simple si
+`prefers-reduced-motion` est activé.
+
+`src/lib/googleReviews.ts` (`getReviews()`, appelée uniquement depuis
+`src/app/page.tsx`, un Server Component) :
+
+- si `GOOGLE_PLACES_API_KEY` et `GOOGLE_PLACE_ID` sont renseignées (voir
+  `.env.local.example`) → interroge l'API Google Places « Place Details » au
+  **build** (site statique, pas de rafraîchissement en direct) ;
+- sinon, ou en cas d'erreur réseau/HTTP → repli silencieux (`console.warn`)
+  sur les 3 témoignages fictifs de `garageInfo.ts`, jamais d'échec de build.
+
+Ces deux variables d'environnement sont **volontairement sans préfixe
+`NEXT_PUBLIC_`** (contrairement à la config Firebase) : la clé Places n'est
+lue qu'au build, jamais envoyée au navigateur.
+
+Le badge « avis Google » à côté du bandeau affiche « Avis Google » + pastille
+« Démonstration » tant que la source est le repli fictif, et bascule
+automatiquement sur « Avis vérifiés sur Google » (sans pastille) dès qu'une
+vraie fiche/clé API est branchée — décision prise pour ne jamais afficher une
+affirmation fausse (« vérifiés » sur des avis inventés).
+
+## 5. Vérifications de cette session
+
+`npm run lint`, `npx tsc --noEmit` et `npm run build` passent sans erreur
+après chaque étape. Rendu vérifié visuellement (Chrome headless, faute de
+Playwright installé dans le projet) en desktop et en largeur mobile réduite ;
+non testé sur un vrai viewport mobile étroit (~390 px) ni par interaction
+réelle (pause au survol validée sur le CSS compilé, pas cliquée en vrai) — un
+passage manuel en `npm run dev` reste recommandé avant mise en production.
+
+## 6. À faire ensuite
+
+1. **Identité git** : les commits de cette session sont signés
+   `aformentin@informatique.lan` (déduit automatiquement de la machine, pas
+   configuré). Pour attribuer les commits à la bonne adresse :
+   `git config --global user.email "arthur.formentin@sts-sio-caen.info"`
+   (et `user.name` si besoin), puis éventuellement `git commit --amend
+   --reset-author` sur les commits concernés si l'attribution doit être
+   corrigée rétroactivement.
+2. **Avis Google** : dès qu'une vraie fiche Google Business existe, créer une
+   clé API Places (console.cloud.google.com) et récupérer le Place ID, les
+   renseigner dans `.env.local` + secrets GitHub Actions (voir README section
+   « Avis Google »), puis redéployer.
+3. Les points 1 à 9 de la section précédente (Firebase réel, secrets GitHub
+   Actions, compte admin, etc.) restent valables et n'ont pas été traités
+   dans cette session.
