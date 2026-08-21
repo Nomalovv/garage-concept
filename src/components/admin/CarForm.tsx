@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Spinner } from "@/components/StateMessage";
+import { fetchAdemeBrands, fetchAdemeModels, fetchAdemeTrims, type AdemeTrim } from "@/lib/ademeApi";
 import { carBrands, carModelsForBrand } from "@/lib/carCatalog";
 import { createCar, updateCar } from "@/lib/cars";
 import { fiscalHorsepower, hpFromKw } from "@/lib/power";
@@ -83,9 +84,84 @@ export default function CarForm({
   const [newImageUrl, setNewImageUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [liveBrands, setLiveBrands] = useState<string[] | null>(null);
+  const [liveModels, setLiveModels] = useState<{
+    brand: string;
+    models: string[];
+  } | null>(null);
+  const [liveTrims, setLiveTrims] = useState<{
+    key: string;
+    trims: AdemeTrim[];
+  } | null>(null);
 
-  const brandOptions = carBrands();
-  const modelOptionsForBrand = carModelsForBrand(values.brand);
+  // Marques/modèles/versions suggérés en direct depuis la base ADEME
+  // (véhicules réellement homologués en France, mise à jour trimestrielle).
+  // Repli sur le catalogue local hors-ligne si l'API est indisponible.
+  useEffect(() => {
+    let active = true;
+    fetchAdemeBrands().then((brands) => {
+      if (active && brands.length > 0) setLiveBrands(brands);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const brand = values.brand.trim();
+    if (!brand) return;
+    let active = true;
+    const timer = setTimeout(() => {
+      fetchAdemeModels(brand).then((models) => {
+        if (active && models.length > 0) setLiveModels({ brand, models });
+      });
+    }, 400);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [values.brand]);
+
+  useEffect(() => {
+    const brand = values.brand.trim();
+    const model = values.model.trim();
+    if (!brand || !model) return;
+    let active = true;
+    const timer = setTimeout(() => {
+      fetchAdemeTrims(brand, model).then((trims) => {
+        if (active) setLiveTrims({ key: `${brand}|${model}`, trims });
+      });
+    }, 400);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [values.brand, values.model]);
+
+  const brandOptions = liveBrands ?? carBrands();
+  const modelOptionsForBrand = values.brand.trim()
+    ? liveModels &&
+      liveModels.brand.localeCompare(values.brand.trim(), "fr", {
+        sensitivity: "base",
+      }) === 0
+      ? liveModels.models
+      : carModelsForBrand(values.brand)
+    : [];
+  const trimKey = `${values.brand.trim()}|${values.model.trim()}`;
+  const trimOptions = liveTrims && liveTrims.key === trimKey ? liveTrims.trims : [];
+
+  function applyTrim(label: string) {
+    const match = trimOptions.find((option) => option.label === label);
+    if (!match) return;
+    setValues((current) => ({
+      ...current,
+      powerKw: match.powerKw ? String(match.powerKw) : current.powerKw,
+      co2: match.co2 ? String(match.co2) : current.co2,
+      fuel: match.fuel ?? current.fuel,
+      bodyType: match.bodyType ?? current.bodyType,
+      transmission: match.transmission ?? current.transmission,
+    }));
+  }
 
   function update<K extends keyof FormValues>(key: K, value: FormValues[K]) {
     setValues((current) => ({ ...current, [key]: value }));
@@ -220,11 +296,24 @@ export default function CarForm({
           </label>
           <input
             id="engine"
+            list="engine-options"
             value={values.engine}
             onChange={(event) => update("engine", event.target.value)}
+            onBlur={(event) => applyTrim(event.target.value.trim())}
             placeholder="1.6 BlueHDi 120, 1.2 PureTech 130…"
             className={fieldClass}
           />
+          <datalist id="engine-options">
+            {trimOptions.map((option) => (
+              <option key={option.label} value={option.label} />
+            ))}
+          </datalist>
+          {trimOptions.length > 0 ? (
+            <p className="mt-1 text-xs text-acier-400">
+              Choisissez une version suggérée (base ADEME) pour pré-remplir
+              puissance, CO2, carburant, carrosserie et boîte.
+            </p>
+          ) : null}
         </div>
         <div>
           <label className={labelClass} htmlFor="powerKw">
