@@ -6,6 +6,10 @@ export interface Car {
   id: string;
   brand: string;
   model: string;
+  trim: string;
+  engine: string;
+  powerKw: number;
+  co2: number;
   year: number;
   price: number;
   mileage: number;

@@ -49,7 +49,7 @@ export default function CarCard({ car }: { car: Car }) {
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div>
           <h3 className="text-base font-semibold text-nuit-900">
-            {car.brand} {car.model}
+            {car.brand} {car.model} {car.trim}
           </h3>
           <p className="mt-1 text-sm text-acier-600">
             {car.year} · {formatMileage(car.mileage)} ·{" "}

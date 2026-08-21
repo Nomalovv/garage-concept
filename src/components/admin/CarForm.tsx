@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Spinner } from "@/components/StateMessage";
 import { createCar, updateCar } from "@/lib/cars";
+import { fiscalHorsepower, hpFromKw } from "@/lib/power";
+import { fetchCarMakes, fetchModelsForMake } from "@/lib/vehicleApi";
 import {
   FUEL_LABELS,
   TRANSMISSION_LABELS,
@@ -16,6 +18,10 @@ import {
 type FormValues = {
   brand: string;
   model: string;
+  trim: string;
+  engine: string;
+  powerKw: string;
+  co2: string;
   year: string;
   price: string;
   mileage: string;
@@ -29,6 +35,10 @@ function initialValues(car: Car | null): FormValues {
   return {
     brand: car?.brand ?? "",
     model: car?.model ?? "",
+    trim: car?.trim ?? "",
+    engine: car?.engine ?? "",
+    powerKw: car?.powerKw ? String(car.powerKw) : "",
+    co2: car?.co2 ? String(car.co2) : "",
     year: String(car?.year ?? new Date().getFullYear()),
     price: car ? String(car.price) : "",
     mileage: car ? String(car.mileage) : "",
@@ -57,10 +67,43 @@ export default function CarForm({
   const [newImageUrl, setNewImageUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [brandOptions, setBrandOptions] = useState<string[]>([]);
+  const [modelOptions, setModelOptions] = useState<string[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    fetchCarMakes().then((makes) => {
+      if (active) setBrandOptions(makes);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!values.brand.trim()) return;
+    let active = true;
+    const timer = setTimeout(() => {
+      fetchModelsForMake(values.brand).then((models) => {
+        if (active) setModelOptions(models);
+      });
+    }, 400);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [values.brand]);
+
+  const modelOptionsForBrand = values.brand.trim() ? modelOptions : [];
 
   function update<K extends keyof FormValues>(key: K, value: FormValues[K]) {
     setValues((current) => ({ ...current, [key]: value }));
   }
+
+  const powerKwValue = Number(values.powerKw) || 0;
+  const co2Value = Number(values.co2) || 0;
+  const computedHp = hpFromKw(powerKwValue);
+  const computedFiscalHp = fiscalHorsepower(powerKwValue, co2Value);
 
   function addImageUrl() {
     const url = newImageUrl.trim();
@@ -80,6 +123,10 @@ export default function CarForm({
     const input: CarInput = {
       brand: values.brand.trim(),
       model: values.model.trim(),
+      trim: values.trim.trim(),
+      engine: values.engine.trim(),
+      powerKw: powerKwValue,
+      co2: co2Value,
       year: Number(values.year) || new Date().getFullYear(),
       price: Number(values.price) || 0,
       mileage: Number(values.mileage) || 0,
@@ -129,10 +176,16 @@ export default function CarForm({
           <input
             id="brand"
             required
+            list="brand-options"
             value={values.brand}
             onChange={(event) => update("brand", event.target.value)}
             className={fieldClass}
           />
+          <datalist id="brand-options">
+            {brandOptions.map((name) => (
+              <option key={name} value={name} />
+            ))}
+          </datalist>
         </div>
         <div>
           <label className={labelClass} htmlFor="model">
@@ -141,11 +194,83 @@ export default function CarForm({
           <input
             id="model"
             required
+            list="model-options"
             value={values.model}
             onChange={(event) => update("model", event.target.value)}
             className={fieldClass}
           />
+          <datalist id="model-options">
+            {modelOptionsForBrand.map((name) => (
+              <option key={name} value={name} />
+            ))}
+          </datalist>
         </div>
+        <div>
+          <label className={labelClass} htmlFor="trim">
+            Finition / édition
+          </label>
+          <input
+            id="trim"
+            value={values.trim}
+            onChange={(event) => update("trim", event.target.value)}
+            placeholder="GT Line, Allure, Style…"
+            className={fieldClass}
+          />
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="engine">
+            Motorisation
+          </label>
+          <input
+            id="engine"
+            value={values.engine}
+            onChange={(event) => update("engine", event.target.value)}
+            placeholder="1.6 BlueHDi 120, 1.2 PureTech 130…"
+            className={fieldClass}
+          />
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="powerKw">
+            Puissance (kW)
+          </label>
+          <input
+            id="powerKw"
+            type="number"
+            min="0"
+            step="1"
+            value={values.powerKw}
+            onChange={(event) => update("powerKw", event.target.value)}
+            placeholder="Voir la carte grise (champ P.2)"
+            className={fieldClass}
+          />
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="co2">
+            Émissions CO2 (g/km)
+          </label>
+          <input
+            id="co2"
+            type="number"
+            min="0"
+            step="1"
+            value={values.co2}
+            onChange={(event) => update("co2", event.target.value)}
+            placeholder="Voir la carte grise (champ V.7)"
+            className={fieldClass}
+          />
+        </div>
+        {computedHp !== null ? (
+          <div className="sm:col-span-2 flex flex-wrap gap-4 rounded-md bg-nuit-50 px-3 py-2 text-sm text-nuit-700">
+            <span>
+              Puissance : <strong>{computedHp} ch</strong>
+            </span>
+            {computedFiscalHp !== null ? (
+              <span>
+                Puissance fiscale : <strong>{computedFiscalHp} CV</strong>
+              </span>
+            ) : null}
+          </div>
+        ) : null}
         <div>
           <label className={labelClass} htmlFor="year">
             Année

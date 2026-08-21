@@ -13,6 +13,7 @@ import {
 import { fetchCar } from "@/lib/cars";
 import { isFirebaseConfigured } from "@/lib/firebase";
 import { formatMileage, formatPrice } from "@/lib/format";
+import { fiscalHorsepower, hpFromKw } from "@/lib/power";
 import { garageInfo } from "@/lib/garageInfo";
 import { FUEL_LABELS, TRANSMISSION_LABELS, type Car } from "@/types";
 
@@ -108,11 +109,18 @@ function CarView({ id }: { id: string }) {
   }
 
   const cover = car.images[activeImage] ?? car.images[0];
+  const hp = hpFromKw(car.powerKw);
+  const fiscalHp = fiscalHorsepower(car.powerKw, car.co2);
   const specs = [
     { label: "Année", value: String(car.year) },
     { label: "Kilométrage", value: formatMileage(car.mileage) },
     { label: "Carburant", value: FUEL_LABELS[car.fuel] },
     { label: "Boîte de vitesses", value: TRANSMISSION_LABELS[car.transmission] },
+    ...(car.engine ? [{ label: "Motorisation", value: car.engine }] : []),
+    ...(hp !== null ? [{ label: "Puissance", value: `${hp} ch` }] : []),
+    ...(fiscalHp !== null
+      ? [{ label: "Puissance fiscale", value: `${fiscalHp} CV` }]
+      : []),
   ];
 
   return (
@@ -174,7 +182,7 @@ function CarView({ id }: { id: string }) {
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-nuit-900">
-              {car.brand} {car.model}
+              {car.brand} {car.model} {car.trim}
             </h1>
             <p className="mt-2 text-sm text-acier-600">
               {car.year} · {formatMileage(car.mileage)} ·{" "}
