@@ -48,7 +48,15 @@ export type ServiceIconName =
   | "controle"
   | "diagnostic"
   | "freins"
-  | "climatisation";
+  | "climatisation"
+  | "batterie"
+  | "embrayage"
+  | "suspension"
+  | "carrosserie"
+  | "vitrage"
+  | "antivol"
+  | "nettoyage"
+  | "depannage";
 
 export interface Service {
   id: string;
@@ -100,4 +108,12 @@ export const SERVICE_ICON_LABELS: Record<ServiceIconName, string> = {
   diagnostic: "Diagnostic électronique",
   freins: "Freins",
   climatisation: "Climatisation",
+  batterie: "Batterie",
+  embrayage: "Embrayage",
+  suspension: "Suspension",
+  carrosserie: "Carrosserie",
+  vitrage: "Pare-brise / vitrage",
+  antivol: "Antivol / alarme",
+  nettoyage: "Nettoyage / detailing",
+  depannage: "Dépannage / remorquage",
 };

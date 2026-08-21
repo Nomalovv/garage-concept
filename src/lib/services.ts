@@ -23,11 +23,19 @@ const ICONS: ServiceIconName[] = [
   "diagnostic",
   "freins",
   "climatisation",
+  "batterie",
+  "embrayage",
+  "suspension",
+  "carrosserie",
+  "vitrage",
+  "antivol",
+  "nettoyage",
+  "depannage",
 ];
 
 export const DEFAULT_SERVICES: ServiceInput[] = [
   {
-    name: "🛢️ Vidange",
+    name: "Vidange",
     description:
       "Remplacement de l'huile moteur et du filtre à huile, contrôle des niveaux et remise à zéro de l'indicateur d'entretien.",
     price: "À partir de 69 €",
@@ -35,7 +43,7 @@ export const DEFAULT_SERVICES: ServiceInput[] = [
     order: 1,
   },
   {
-    name: "🔧 Révision complète",
+    name: "Révision complète",
     description:
       "Révision constructeur : filtres, bougies, courroies, freins, liquides et contrôle de 100 points sur le véhicule.",
     price: "À partir de 189 €",
@@ -43,7 +51,7 @@ export const DEFAULT_SERVICES: ServiceInput[] = [
     order: 2,
   },
   {
-    name: "🛞 Changement de pneus",
+    name: "Changement de pneus",
     description:
       "Montage, équilibrage et valve neuve pour tous types de pneumatiques, avec géométrie contrôlée.",
     price: "À partir de 25 € / pneu",
@@ -51,7 +59,7 @@ export const DEFAULT_SERVICES: ServiceInput[] = [
     order: 3,
   },
   {
-    name: "🚦 Contrôle technique",
+    name: "Contrôle technique",
     description:
       "Préparation au contrôle technique et prise en charge complète du passage au centre agréé partenaire.",
     price: "À partir de 79 €",
@@ -59,7 +67,7 @@ export const DEFAULT_SERVICES: ServiceInput[] = [
     order: 4,
   },
   {
-    name: "💻 Diagnostic électronique",
+    name: "Diagnostic électronique",
     description:
       "Lecture et effacement des codes défaut sur valise multimarque, avec rapport détaillé et devis de réparation.",
     price: "À partir de 49 €",
@@ -67,7 +75,7 @@ export const DEFAULT_SERVICES: ServiceInput[] = [
     order: 5,
   },
   {
-    name: "🛑 Réparation freins",
+    name: "Réparation freins",
     description:
       "Remplacement des plaquettes, disques et liquide de frein, purge du circuit et contrôle de l'ABS.",
     price: "À partir de 129 €",
@@ -75,7 +83,7 @@ export const DEFAULT_SERVICES: ServiceInput[] = [
     order: 6,
   },
   {
-    name: "❄️ Climatisation",
+    name: "Climatisation",
     description:
       "Recharge du gaz, remplacement du filtre habitacle, désinfection du circuit et recherche de fuite.",
     price: "À partir de 89 €",
@@ -91,67 +99,67 @@ export const DEFAULT_SERVICES: ServiceInput[] = [
 export const SERVICE_PRESETS: ServiceInput[] = [
   ...DEFAULT_SERVICES,
   {
-    name: "🔋 Batterie",
+    name: "Batterie",
     description:
       "Test et remplacement de la batterie, contrôle de charge et de l'alternateur.",
     price: "À partir de 99 €",
-    icon: "diagnostic",
+    icon: "batterie",
     order: 8,
   },
   {
-    name: "⚙️ Embrayage",
+    name: "Embrayage",
     description:
       "Remplacement du kit d'embrayage (disque, mécanisme, butée) et du volant moteur si nécessaire.",
     price: "Sur devis",
-    icon: "revision",
+    icon: "embrayage",
     order: 9,
   },
   {
-    name: "🔩 Amortisseurs & suspension",
+    name: "Amortisseurs & suspension",
     description:
       "Remplacement des amortisseurs, ressorts et biellettes, avec contrôle de la géométrie.",
     price: "Sur devis",
-    icon: "freins",
+    icon: "suspension",
     order: 10,
   },
   {
-    name: "🎨 Carrosserie & peinture",
+    name: "Carrosserie & peinture",
     description:
       "Réparation de chocs, débosselage et remise en peinture teintée à l'identique.",
     price: "Sur devis",
-    icon: "revision",
+    icon: "carrosserie",
     order: 11,
   },
   {
-    name: "🪟 Pare-brise & vitrage",
+    name: "Pare-brise & vitrage",
     description:
       "Réparation d'impact ou remplacement de pare-brise, prise en charge assurance possible.",
     price: "À partir de 39 €",
-    icon: "controle",
+    icon: "vitrage",
     order: 12,
   },
   {
-    name: "🔒 Antivol & alarme",
+    name: "Antivol & alarme",
     description:
       "Installation et dépannage de systèmes antivol, alarme et surveillance du véhicule.",
     price: "Sur devis",
-    icon: "diagnostic",
+    icon: "antivol",
     order: 13,
   },
   {
-    name: "✨ Nettoyage intérieur / detailing",
+    name: "Nettoyage intérieur / detailing",
     description:
       "Nettoyage complet intérieur et extérieur, shampouinage sellerie et lustrage carrosserie.",
     price: "À partir de 59 €",
-    icon: "revision",
+    icon: "nettoyage",
     order: 14,
   },
   {
-    name: "🚛 Dépannage & remorquage",
+    name: "Dépannage & remorquage",
     description:
       "Intervention sur place ou remorquage jusqu'à l'atelier en cas de panne.",
     price: "Sur devis",
-    icon: "controle",
+    icon: "depannage",
     order: 15,
   },
 ];

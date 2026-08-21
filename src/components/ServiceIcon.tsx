@@ -47,6 +47,63 @@ const PATHS: Record<ServiceIconName, React.ReactNode> = {
       <path d="m9 5 3 2 3-2M9 19l3-2 3 2" />
     </>
   ),
+  batterie: (
+    <>
+      <rect x="4" y="8" width="16" height="10" rx="1.5" />
+      <path d="M8 8V6M16 8V6" />
+      <path d="M9 12.5h2M14.5 11v3M13 12.5h3" />
+    </>
+  ),
+  embrayage: (
+    <>
+      <circle cx="12" cy="12" r="7" />
+      <circle cx="12" cy="12" r="2" />
+      <path d="M12 5v2M12 17v2M5 12h2M17 12h2M7.5 7.5l1.4 1.4M15.1 15.1l1.4 1.4M7.5 16.5l1.4-1.4M15.1 8.9l1.4-1.4" />
+    </>
+  ),
+  suspension: (
+    <>
+      <path d="M12 2v2.5" />
+      <path d="M8 5.5h8M8 8.5h8M8 11.5h8M8 14.5h8M8 17.5h8" />
+      <path d="M12 19.5V22" />
+    </>
+  ),
+  carrosserie: (
+    <>
+      <path d="M4 15l1.5-5.5A2 2 0 0 1 7.4 8h9.2a2 2 0 0 1 1.9 1.5L20 15" />
+      <path d="M3.5 15h17v3a1 1 0 0 1-1 1H4.5a1 1 0 0 1-1-1v-3Z" />
+      <circle cx="8" cy="18.5" r="1.2" />
+      <circle cx="16" cy="18.5" r="1.2" />
+    </>
+  ),
+  vitrage: (
+    <>
+      <path d="M4 16 6 6h12l2 10" />
+      <path d="M4 16h16" />
+      <path d="m10.5 6-2 6 2.5 1-1.5 3" />
+    </>
+  ),
+  antivol: (
+    <>
+      <rect x="5" y="11" width="14" height="9" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      <circle cx="12" cy="15" r="1.3" />
+      <path d="M12 16.3V18" />
+    </>
+  ),
+  nettoyage: (
+    <>
+      <path d="M12 3c-1.3 3-4 4.3-4 7.3a4 4 0 0 0 8 0c0-3-2.7-4.3-4-7.3Z" />
+      <path d="M5 5.5l1 1M18 5.5l-1 1M4.5 12.5h1.2M18.3 12.5h1.2" />
+    </>
+  ),
+  depannage: (
+    <>
+      <path d="M12 3 2.5 20h19L12 3Z" />
+      <path d="M12 10v4" />
+      <path d="M12 17h.01" />
+    </>
+  ),
 };
 
 export default function ServiceIcon({
