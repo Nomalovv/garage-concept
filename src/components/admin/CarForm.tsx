@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@/components/StateMessage";
 import { fetchAdemeBrands, fetchAdemeModels, fetchAdemeTrims, type AdemeTrim } from "@/lib/ademeApi";
 import { carBrands, carModelsForBrand } from "@/lib/carCatalog";
+import { carColors } from "@/lib/colorCatalog";
 import { createCar, updateCar } from "@/lib/cars";
 import { engineSuggestionsForBrand } from "@/lib/engineCatalog";
 import { fiscalHorsepower, hpFromKw } from "@/lib/power";
@@ -443,11 +444,17 @@ export default function CarForm({
           </label>
           <input
             id="color"
+            list="color-options"
             value={values.color}
             onChange={(event) => update("color", event.target.value)}
             placeholder="Blanc nacré, Gris platinium…"
             className={fieldClass}
           />
+          <datalist id="color-options">
+            {carColors.map((name) => (
+              <option key={name} value={name} />
+            ))}
+          </datalist>
         </div>
         <div>
           <label className={labelClass} htmlFor="doors">
@@ -535,7 +542,6 @@ export default function CarForm({
             id="price"
             type="number"
             min="0"
-            step="100"
             required
             value={values.price}
             onChange={(event) => update("price", event.target.value)}
@@ -550,7 +556,6 @@ export default function CarForm({
             id="mileage"
             type="number"
             min="0"
-            step="100"
             required
             value={values.mileage}
             onChange={(event) => update("mileage", event.target.value)}
