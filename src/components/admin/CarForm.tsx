@@ -58,7 +58,7 @@ function initialValues(car: Car | null): FormValues {
     color: car?.color ?? "",
     firstRegistration: car?.firstRegistration ?? "",
     euroNorm: car?.euroNorm ?? "",
-    year: String(car?.year ?? new Date().getFullYear()),
+    year: String(car?.year ?? currentYear),
     price: car ? String(car.price) : "",
     mileage: car ? String(car.mileage) : "",
     fuel: car?.fuel ?? "essence",
@@ -67,6 +67,8 @@ function initialValues(car: Car | null): FormValues {
     sold: car?.sold ?? false,
   };
 }
+
+const currentYear = new Date().getFullYear();
 
 const fieldClass =
   "mt-1 w-full rounded-md border border-nuit-200 px-3 py-2 text-sm text-nuit-900 outline-none focus:border-flamme-600 focus:ring-2 focus:ring-flamme-100";
@@ -251,7 +253,7 @@ export default function CarForm({
       color: values.color.trim(),
       firstRegistration: values.firstRegistration,
       euroNorm: values.euroNorm,
-      year: Number(values.year) || new Date().getFullYear(),
+      year: Number(values.year) || currentYear,
       price: Number(values.price) || 0,
       mileage: Number(values.mileage) || 0,
       fuel: values.fuel,
@@ -527,7 +529,7 @@ export default function CarForm({
             id="year"
             type="number"
             min="1950"
-            max="2100"
+            max={currentYear}
             required
             value={values.year}
             onChange={(event) => update("year", event.target.value)}
