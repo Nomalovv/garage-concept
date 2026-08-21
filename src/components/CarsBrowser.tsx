@@ -88,7 +88,7 @@ export default function CarsBrowser() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-nuit-100 bg-nuit-50 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-y border-nuit-900/15 bg-papier-100 px-4 py-3">
         <div
           className="flex flex-wrap gap-2"
           role="group"
@@ -100,10 +100,10 @@ export default function CarsBrowser() {
               type="button"
               onClick={() => setAvailability(tab.value)}
               aria-pressed={availability === tab.value}
-              className={`rounded-md px-4 py-2 text-sm font-medium transition ${
+              className={`repere-scene px-4 py-2.5 transition-colors ${
                 availability === tab.value
-                  ? "bg-nuit-900 text-white"
-                  : "bg-white text-nuit-700 hover:bg-nuit-100"
+                  ? "border border-nuit-950 bg-nuit-950 text-white"
+                  : "border border-nuit-900/15 bg-papier-50 text-acier-600 hover:text-nuit-950"
               }`}
             >
               {tab.label}
@@ -112,14 +112,14 @@ export default function CarsBrowser() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <label className="flex items-center gap-2 text-sm text-acier-600">
+          <label className="repere-scene flex items-center gap-2 text-acier-600">
             Carburant
             <select
               value={fuel}
               onChange={(event) =>
                 setFuel(event.target.value as Fuel | "toutes")
               }
-              className="rounded-md border border-nuit-200 bg-white px-3 py-2 text-sm text-nuit-900"
+              className="border border-nuit-900/15 bg-papier-50 px-3 py-2 font-sans text-sm normal-case tracking-normal text-nuit-900"
             >
               <option value="toutes">Tous</option>
               {(Object.keys(FUEL_LABELS) as Fuel[]).map((value) => (
@@ -130,12 +130,12 @@ export default function CarsBrowser() {
             </select>
           </label>
 
-          <label className="flex items-center gap-2 text-sm text-acier-600">
+          <label className="repere-scene flex items-center gap-2 text-acier-600">
             Trier par
             <select
               value={sort}
               onChange={(event) => setSort(event.target.value as Sort)}
-              className="rounded-md border border-nuit-200 bg-white px-3 py-2 text-sm text-nuit-900"
+              className="border border-nuit-900/15 bg-papier-50 px-3 py-2 font-sans text-sm normal-case tracking-normal text-nuit-900"
             >
               {SORTS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -154,9 +154,9 @@ export default function CarsBrowser() {
         />
       ) : (
         <>
-          <p className="text-sm text-acier-600">
-            {visible.length} véhicule{visible.length > 1 ? "s" : ""} affiché
-            {visible.length > 1 ? "s" : ""}
+          <p className="repere-scene text-acier-600">
+            {visible.length} véhicule{visible.length > 1 ? "s" : ""} à
+            l&apos;affiche
           </p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((car) => (

@@ -26,9 +26,9 @@ export function Spinner({ className = "h-6 w-6" }: { className?: string }) {
 
 export function LoadingState({ label = "Chargement…" }: { label?: string }) {
   return (
-    <div className="flex items-center justify-center gap-3 rounded-xl border border-dashed border-nuit-200 bg-nuit-50 px-6 py-16 text-acier-600">
+    <div className="flex items-center justify-center gap-3 border border-dashed border-nuit-900/20 bg-papier-100 px-6 py-16 text-acier-600">
       <Spinner />
-      <span className="text-sm font-medium">{label}</span>
+      <span className="repere-scene">{label}</span>
     </div>
   );
 }
@@ -41,10 +41,12 @@ export function EmptyState({
   description?: string;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-nuit-200 bg-nuit-50 px-6 py-16 text-center">
-      <p className="text-base font-semibold text-nuit-900">{title}</p>
+    <div className="border border-dashed border-nuit-900/20 bg-papier-100 px-6 py-16 text-center">
+      <p className="titre-scene text-2xl text-nuit-950">{title}</p>
       {description ? (
-        <p className="mt-2 text-sm text-acier-600">{description}</p>
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-acier-600">
+          {description}
+        </p>
       ) : null}
     </div>
   );
@@ -54,7 +56,7 @@ export function ErrorState({ message }: { message: string }) {
   return (
     <div
       role="alert"
-      className="rounded-xl border border-red-200 bg-red-50 px-6 py-6 text-center text-sm text-red-700"
+      className="border-l-2 border-flamme-600 bg-flamme-100 px-6 py-5 text-sm leading-relaxed text-flamme-700"
     >
       {message}
     </div>
@@ -63,9 +65,11 @@ export function ErrorState({ message }: { message: string }) {
 
 export function ConfigNotice() {
   return (
-    <div className="rounded-xl border border-amber-200 bg-amber-50 px-6 py-6 text-sm text-amber-800">
-      <p className="font-semibold">Firebase n&apos;est pas encore configuré.</p>
-      <p className="mt-2 leading-relaxed">
+    <div className="border border-dashed border-nuit-900/20 bg-papier-100 px-6 py-6 text-sm text-acier-600">
+      <p className="repere-scene text-flamme-600">
+        Firebase n&apos;est pas encore configuré
+      </p>
+      <p className="mt-3 leading-relaxed">
         Renseignez les variables <code>NEXT_PUBLIC_FIREBASE_*</code> dans un
         fichier <code>.env.local</code> (modèle disponible dans{" "}
         <code>.env.local.example</code>) pour afficher les données réelles du

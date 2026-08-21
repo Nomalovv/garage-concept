@@ -60,9 +60,15 @@ export default function FeaturedCars({ count = 4 }: { count?: number }) {
       <div className="text-center">
         <Link
           href="/voitures"
-          className="inline-flex items-center justify-center rounded-md border border-nuit-200 px-6 py-3 text-sm font-semibold text-nuit-900 transition hover:border-nuit-600 hover:bg-nuit-50"
+          className="group inline-flex items-center gap-2 border-b border-nuit-900/30 pb-1 text-sm font-semibold text-nuit-900 transition-colors hover:border-flamme-600 hover:text-flamme-600"
         >
           Voir toutes nos occasions
+          <span
+            aria-hidden="true"
+            className="transition-transform group-hover:translate-x-1"
+          >
+            →
+          </span>
         </Link>
       </div>
     </div>

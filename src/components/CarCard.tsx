@@ -9,9 +9,9 @@ export default function CarCard({ car }: { car: Car }) {
   return (
     <Link
       href={`/voitures/detail?id=${encodeURIComponent(car.id)}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-nuit-100 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-nuit-200 hover:shadow-md"
+      className="group flex flex-col border border-nuit-900/12 bg-papier-50 transition-colors hover:border-nuit-900/40"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-nuit-50">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-papier-200">
         {cover ? (
           <Image
             src={cover}
@@ -40,33 +40,33 @@ export default function CarCard({ car }: { car: Car }) {
           </div>
         )}
         {car.sold ? (
-          <span className="absolute left-3 top-3 rounded-full bg-nuit-900/90 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
+          <span className="repere-scene absolute left-0 top-4 bg-nuit-950 px-3 py-1.5 text-white">
             Vendue
           </span>
         ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-4">
+      <div className="flex flex-1 flex-col gap-3 border-t border-nuit-900/12 p-5">
         <div>
-          <h3 className="text-base font-semibold text-nuit-900">
+          <h3 className="titre-scene text-xl text-nuit-950">
             {car.brand} {car.model} {car.trim}
           </h3>
-          <p className="mt-1 text-sm text-acier-600">
+          <p className="mt-2 text-sm text-acier-600">
             {car.year} · {formatMileage(car.mileage)} ·{" "}
             {FUEL_LABELS[car.fuel]} · {TRANSMISSION_LABELS[car.transmission]}
           </p>
         </div>
 
-        <div className="mt-auto flex items-end justify-between">
+        <div className="mt-auto flex items-end justify-between gap-3 border-t border-nuit-900/12 pt-4">
           <span
-            className={`text-xl font-bold ${
+            className={`titre-scene text-2xl ${
               car.sold ? "text-acier-400 line-through" : "text-flamme-600"
             }`}
           >
             {formatPrice(car.price)}
           </span>
-          <span className="text-sm font-medium text-nuit-700 group-hover:text-flamme-600">
-            Voir la fiche →
+          <span className="repere-scene text-acier-600 transition-colors group-hover:text-flamme-600">
+            Voir →
           </span>
         </div>
       </div>
