@@ -27,9 +27,9 @@ function BackLink() {
   return (
     <Link
       href="/voitures"
-      className="inline-flex items-center gap-2 text-sm font-medium text-acier-600 hover:text-nuit-900"
+      className="repere-scene inline-flex items-center gap-2 text-acier-600 transition-colors hover:text-flamme-600"
     >
-      ← Retour aux véhicules
+      ← Retour au catalogue
     </Link>
   );
 }
@@ -145,7 +145,7 @@ function CarView({ id }: { id: string }) {
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <div className="space-y-4">
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-nuit-100 bg-nuit-50">
+          <div className="relative aspect-[4/3] w-full overflow-hidden border border-nuit-900/15 bg-papier-200">
             {cover ? (
               <Image
                 src={cover}
@@ -161,7 +161,7 @@ function CarView({ id }: { id: string }) {
               </div>
             )}
             {car.sold ? (
-              <span className="absolute left-4 top-4 rounded-full bg-nuit-900/90 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white">
+              <span className="repere-scene absolute left-0 top-5 bg-nuit-950 px-4 py-2 text-white">
                 Vendue
               </span>
             ) : null}
@@ -176,10 +176,10 @@ function CarView({ id }: { id: string }) {
                   onClick={() => setActiveImage(index)}
                   aria-label={`Afficher la photo ${index + 1}`}
                   aria-pressed={index === activeImage}
-                  className={`relative aspect-square overflow-hidden rounded-lg border transition ${
+                  className={`relative aspect-square overflow-hidden border transition-colors ${
                     index === activeImage
-                      ? "border-flamme-600 ring-2 ring-flamme-100"
-                      : "border-nuit-100 hover:border-nuit-200"
+                      ? "border-flamme-600"
+                      : "border-nuit-900/15 opacity-70 hover:opacity-100"
                   }`}
                 >
                   <Image
@@ -196,65 +196,84 @@ function CarView({ id }: { id: string }) {
         </div>
 
         <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-nuit-900">
-              {car.brand} {car.model} {car.trim}
-            </h1>
-            <p className="mt-2 text-sm text-acier-600">
+          <div className="border-t border-nuit-900/15 pt-5">
+            <p className="repere-scene text-acier-600">
               {car.year} · {formatMileage(car.mileage)} ·{" "}
               {FUEL_LABELS[car.fuel]}
             </p>
+            <h1 className="titre-scene mt-4 text-4xl text-nuit-950 sm:text-5xl">
+              {car.brand} {car.model}{" "}
+              {car.trim ? (
+                <span className="italic text-flamme-600">{car.trim}</span>
+              ) : null}
+            </h1>
             <p
-              className={`mt-4 text-4xl font-bold ${
+              className={`titre-scene mt-5 text-5xl ${
                 car.sold ? "text-acier-400 line-through" : "text-flamme-600"
               }`}
             >
               {formatPrice(car.price)}
             </p>
             {car.sold ? (
-              <p className="mt-2 text-sm font-medium text-acier-600">
+              <p className="mt-3 text-sm leading-relaxed text-acier-600">
                 Ce véhicule a été vendu. Contactez-nous pour connaître les
                 arrivages similaires.
               </p>
             ) : null}
           </div>
 
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-nuit-100 bg-nuit-100">
+          <dl className="grid grid-cols-2 border-t border-l border-nuit-900/15">
             {specs.map((spec) => (
-              <div key={spec.label} className="bg-white p-4">
-                <dt className="text-xs uppercase tracking-widest text-acier-400">
-                  {spec.label}
-                </dt>
-                <dd className="mt-1 text-sm font-semibold text-nuit-900">
+              <div
+                key={spec.label}
+                className="border-r border-b border-nuit-900/15 p-4"
+              >
+                <dt className="repere-scene text-acier-400">{spec.label}</dt>
+                <dd className="mt-2 text-sm font-semibold text-nuit-950">
                   {spec.value}
                 </dd>
               </div>
             ))}
+            {/* Case de remplissage : referme la grille quand le nombre de
+                caractéristiques est impair. */}
+            {specs.length % 2 === 1 ? (
+              <div
+                aria-hidden="true"
+                className="border-r border-b border-nuit-900/15"
+              />
+            ) : null}
           </dl>
 
           {car.description ? (
-            <div className="rounded-xl border border-nuit-100 bg-white p-5">
-              <h2 className="text-base font-semibold text-nuit-900">
-                Description
-              </h2>
-              <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-acier-600">
+            <div className="border-t border-nuit-900/15 pt-5">
+              <h2 className="repere-scene text-acier-600">Description</h2>
+              <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-nuit-900">
                 {car.description}
               </p>
             </div>
           ) : null}
 
-          <div className="rounded-xl border border-nuit-100 bg-nuit-50 p-5">
-            <h2 className="text-base font-semibold text-nuit-900">
+          <div className="relative border border-nuit-900/15 bg-papier-100 p-6">
+            <span
+              aria-hidden="true"
+              className="absolute -left-px -top-px h-4 w-4 border-l-2 border-t-2 border-flamme-600"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-px -right-px h-4 w-4 border-b-2 border-r-2 border-flamme-600"
+            />
+            <p className="repere-scene text-acier-600">Prendre contact</p>
+            <h2 className="titre-scene mt-4 text-2xl text-nuit-950">
               Ce véhicule vous intéresse ?
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-acier-600">
+            <p className="mt-3 text-sm leading-relaxed text-acier-600">
               Contactez le garage pour organiser un essai ou obtenir une
               estimation de reprise de votre véhicule actuel.
             </p>
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-4">
               <a
                 href={`tel:${garageInfo.phone}`}
-                className="rounded-md bg-flamme-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-flamme-700"
+                className="bg-flamme-600 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-flamme-700"
               >
                 {garageInfo.phoneDisplay}
               </a>
@@ -262,9 +281,15 @@ function CarView({ id }: { id: string }) {
                 href={`mailto:${garageInfo.email}?subject=${encodeURIComponent(
                   `Demande d'information — ${car.brand} ${car.model}`,
                 )}`}
-                className="rounded-md border border-nuit-200 bg-white px-5 py-2.5 text-sm font-semibold text-nuit-900 transition hover:bg-nuit-100"
+                className="group inline-flex items-center gap-2 border-b border-nuit-900/30 pb-1 text-sm font-semibold text-nuit-900 transition-colors hover:border-flamme-600 hover:text-flamme-600"
               >
                 Envoyer un e-mail
+                <span
+                  aria-hidden="true"
+                  className="transition-transform group-hover:translate-x-1"
+                >
+                  →
+                </span>
               </a>
             </div>
           </div>
