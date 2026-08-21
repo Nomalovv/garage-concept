@@ -6,6 +6,7 @@ import { Spinner } from "@/components/StateMessage";
 import { fetchAdemeBrands, fetchAdemeModels, fetchAdemeTrims, type AdemeTrim } from "@/lib/ademeApi";
 import { carBrands, carModelsForBrand } from "@/lib/carCatalog";
 import { createCar, updateCar } from "@/lib/cars";
+import { engineSuggestionsForBrand } from "@/lib/engineCatalog";
 import { fiscalHorsepower, hpFromKw } from "@/lib/power";
 import {
   BODY_TYPE_LABELS,
@@ -161,6 +162,13 @@ export default function CarForm({
     : [];
   const trimKey = `${values.brand.trim()}|${values.model.trim()}`;
   const trimOptions = liveTrims && liveTrims.key === trimKey ? liveTrims.trims : [];
+  // L'ADEME ne connaît que les modèles encore commercialisés à neuf : pour
+  // les autres (occasion ancienne), on propose des motorisations génériques
+  // typiques de la marque plutôt que de laisser le champ sans suggestion.
+  const engineFallbackOptions =
+    trimOptions.length === 0 && values.brand.trim()
+      ? engineSuggestionsForBrand(values.brand)
+      : [];
 
   // La marque (ou le modèle) changeant, tout ce qui en découlait ne
   // correspond plus au véhicule : on l'efface pour éviter une incohérence du
@@ -349,6 +357,9 @@ export default function CarForm({
             {trimOptions.map((option) => (
               <option key={option.label} value={trimDisplayLabel(option)} />
             ))}
+            {engineFallbackOptions.map((name) => (
+              <option key={name} value={name} />
+            ))}
           </datalist>
           {trimOptions.length > 0 ? (
             <p className="mt-1 text-xs text-acier-400">
@@ -356,6 +367,12 @@ export default function CarForm({
               puissance, CO2, carburant, carrosserie et boîte. Portes/places
               sont alors estimées selon la carrosserie (à corriger si besoin,
               l&apos;ADEME ne fournit pas cette donnée).
+            </p>
+          ) : engineFallbackOptions.length > 0 ? (
+            <p className="mt-1 text-xs text-acier-400">
+              Modèle absent de l&apos;ADEME (probablement discontinué) :
+              motorisations génériques de la marque proposées à titre
+              indicatif, sans pré-remplissage automatique.
             </p>
           ) : null}
         </div>

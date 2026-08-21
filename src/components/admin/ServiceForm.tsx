@@ -3,7 +3,7 @@
 import { useState } from "react";
 import ServiceIcon from "@/components/ServiceIcon";
 import { Spinner } from "@/components/StateMessage";
-import { createService, updateService } from "@/lib/services";
+import { createService, SERVICE_PRESETS, updateService } from "@/lib/services";
 import {
   SERVICE_ICON_LABELS,
   type Service,
@@ -33,6 +33,13 @@ export default function ServiceForm({
   const [order, setOrder] = useState(String(service?.order ?? nextOrder));
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function applyPreset(preset: ServiceInput) {
+    setName(preset.name);
+    setDescription(preset.description);
+    setPrice(preset.price);
+    setIcon(preset.icon);
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -77,6 +84,28 @@ export default function ServiceForm({
       <h2 className="text-lg font-semibold text-nuit-900">
         {service ? `Modifier « ${service.name} »` : "Ajouter une prestation"}
       </h2>
+
+      {!service ? (
+        <div>
+          <p className={labelClass}>Préréglages (facultatif)</p>
+          <p className="mt-1 text-xs text-acier-400">
+            Cliquez pour pré-remplir nom, description, tarif et icône —
+            modifiable ensuite avant d&apos;enregistrer.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {SERVICE_PRESETS.map((preset) => (
+              <button
+                key={preset.name}
+                type="button"
+                onClick={() => applyPreset(preset)}
+                className="rounded-full border border-nuit-200 px-3 py-1.5 text-sm text-nuit-700 transition hover:border-flamme-600 hover:text-flamme-700"
+              >
+                {preset.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
