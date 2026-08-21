@@ -20,7 +20,7 @@ export default function ContactPage() {
           <>
             Nous
             <br />
-            <span className="italic text-flamme-600">contacter</span>
+            <span className="text-flamme-600">contacter</span>
           </>
         }
         description={`L'atelier vous accueille du lundi au samedi, avec ou sans rendez-vous, au ${garageInfo.address.street} à ${garageInfo.address.city}. Appelez-nous pour un devis ou une estimation de reprise.`}
@@ -41,7 +41,7 @@ export default function ContactPage() {
               <>
                 Coordonnées
                 <br />
-                <span className="italic text-flamme-600">et horaires</span>
+                <span className="text-flamme-600">et horaires</span>
               </>
             }
             description="Un doute sur l'itinéraire ? Le plan ci-dessous vous mène directement devant les portes de l'atelier."
@@ -71,7 +71,7 @@ export default function ContactPage() {
               <>
                 Le plus rapide,
                 <br />
-                <span className="italic text-flamme-500">c&apos;est le téléphone</span>
+                <span className="text-flamme-500">c&apos;est le téléphone</span>
               </>
             }
             description="Un mécanicien vous répond pendant les heures d'ouverture et vous propose un créneau, souvent dans la journée."

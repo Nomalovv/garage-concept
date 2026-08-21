@@ -1,24 +1,26 @@
 import type { Metadata } from "next";
-import { Archivo, IBM_Plex_Mono, Newsreader } from "next/font/google";
+import { Barlow, IBM_Plex_Mono, Oswald } from "next/font/google";
 import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { garageInfo } from "@/lib/garageInfo";
 
-// Grotesque éditoriale (presse américaine) pour le corps de texte : charpentée,
-// un peu sèche, elle tient la lecture sans l'aspect « interface » générique.
-const archivo = Archivo({
-  variable: "--font-archivo",
+// Corps de texte : grotesque dessinée d'après la signalétique routière
+// californienne (plaques, panneaux). Très lisible, un peu mécanique, elle
+// parle « atelier » plutôt que « interface d'application ».
+const barlow = Barlow({
+  variable: "--font-barlow",
   subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
 });
 
-// Serif de presse pour les grands titres : taille optique variable, vraie
-// italique dessinée — l'esprit générique de film / magazine sans le cliché.
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+// Titres : condensée de signalétique (famille Alternate Gothic), celle des
+// plaques d'immatriculation et des affiches placardées. Posée en capitales,
+// elle donne le ton « atelier / affiche » du site.
+const oswald = Oswald({
+  variable: "--font-oswald",
   subsets: ["latin", "latin-ext"],
-  style: ["normal", "italic"],
-  axes: ["opsz"],
+  weight: ["400", "500", "600", "700"],
 });
 
 // Monospace technique façon fiche d'atelier, pour les repères de scène.
@@ -42,7 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="fr"
       data-scroll-behavior="smooth"
-      className={`${archivo.variable} ${plexMono.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${barlow.variable} ${plexMono.variable} ${oswald.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-papier-50 text-nuit-900">
         <SiteHeader />

@@ -22,7 +22,7 @@ export default function ServicesPage() {
           <>
             Nos services
             <br />
-            <span className="italic text-flamme-600">d&apos;entretien</span>
+            <span className="text-flamme-600">d&apos;entretien</span>
           </>
         }
         description="Toutes marques, avec ou sans rendez-vous. Chaque intervention est précédée d'un devis gratuit et détaillé, et vous repartez avec la facture complète des pièces posées."
@@ -43,7 +43,7 @@ export default function ServicesPage() {
               <>
                 Du simple entretien
                 <br />
-                <span className="italic text-flamme-600">
+                <span className="text-flamme-600">
                   à la mécanique lourde
                 </span>
               </>
@@ -75,7 +75,7 @@ export default function ServicesPage() {
               <>
                 Ce que nous
                 <br />
-                <span className="italic text-flamme-500">garantissons</span>
+                <span className="text-flamme-500">garantissons</span>
               </>
             }
             description="Six engagements tenus sur chaque véhicule vendu et chaque intervention réalisée à l'atelier."
@@ -111,7 +111,7 @@ export default function ServicesPage() {
               <>
                 Un devis,
                 <br />
-                <span className="italic text-flamme-600">une question ?</span>
+                <span className="text-flamme-600">une question ?</span>
               </>
             }
             description={`Appelez l'atelier ou passez directement au ${garageInfo.address.street}, ${garageInfo.address.postalCode} ${garageInfo.address.city}. Le diagnostic est offert.`}

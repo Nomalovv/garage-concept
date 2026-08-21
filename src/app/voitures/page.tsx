@@ -22,7 +22,7 @@ export default function CarsPage() {
           <>
             Nos voitures
             <br />
-            <span className="italic text-flamme-600">d&apos;occasion</span>
+            <span className="text-flamme-600">d&apos;occasion</span>
           </>
         }
         description="Chaque véhicule est révisé, contrôlé sur 100 points et vendu avec son historique d'entretien. Une reprise de votre ancienne voiture est possible."
@@ -43,7 +43,7 @@ export default function CarsPage() {
               <>
                 Toutes les voitures
                 <br />
-                <span className="italic text-flamme-600">à l&apos;affiche</span>
+                <span className="text-flamme-600">à l&apos;affiche</span>
               </>
             }
             description="Filtrez par disponibilité ou par carburant, puis triez la sélection selon votre budget ou le kilométrage."
@@ -73,7 +73,7 @@ export default function CarsPage() {
               <>
                 Votre ancienne voiture,
                 <br />
-                <span className="italic text-flamme-500">reprise au juste prix</span>
+                <span className="text-flamme-500">reprise au juste prix</span>
               </>
             }
             description="Nous estimons votre véhicule actuel gratuitement et déduisons la reprise du prix de votre prochaine voiture. Un essai peut être organisé sur simple appel."

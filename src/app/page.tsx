@@ -55,7 +55,7 @@ export default function HomePage() {
               <>
                 Nos véhicules
                 <br />
-                <span className="italic text-flamme-600">
+                <span className="text-flamme-600">
                   d&apos;occasion
                 </span>
               </>
@@ -78,7 +78,7 @@ export default function HomePage() {
               <>
                 Toutes marques,
                 <br />
-                <span className="italic text-flamme-600">toutes pannes</span>
+                <span className="text-flamme-600">toutes pannes</span>
               </>
             }
             description="Entretien courant, mécanique lourde et diagnostic : nos mécaniciens interviennent sur toutes les marques."
@@ -122,7 +122,7 @@ export default function HomePage() {
               <>
                 Pourquoi
                 <br />
-                <span className="italic text-flamme-500">nous choisir</span>
+                <span className="text-flamme-500">nous choisir</span>
               </>
             }
             description="Six engagements tenus sur chaque véhicule vendu et chaque intervention réalisée à l'atelier."
@@ -158,7 +158,7 @@ export default function HomePage() {
               <>
                 Ils nous font
                 <br />
-                <span className="italic text-flamme-600">confiance</span>
+                <span className="text-flamme-600">confiance</span>
               </>
             }
           />
@@ -213,7 +213,7 @@ export default function HomePage() {
               <>
                 Nous
                 <br />
-                <span className="italic text-flamme-600">contacter</span>
+                <span className="text-flamme-600">contacter</span>
               </>
             }
             description={`L'atelier vous accueille du lundi au samedi, avec ou sans rendez-vous, au ${garageInfo.address.street} à ${garageInfo.address.city}.`}

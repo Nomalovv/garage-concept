@@ -29,8 +29,8 @@
   --color-papier-300: #e3dbcb;
   --color-papier-400: #cdc1ac;
 
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-newsreader), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-titre: var(--font-oswald), "Haettenschweiler", "Arial Narrow", sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
   /* Mouvement d'ambiance (bandeau défilant du générique) */
@@ -57,13 +57,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Titres éditoriaux : serif de presse, taille optique automatique. */
+/* Titres : condensée de signalétique posée en capitales, comme un mot
+   pochoiré sur une porte d'atelier ou placardé sur une affiche. */
 .titre-scene {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  font-optical-sizing: auto;
-  letter-spacing: -0.012em;
-  line-height: 1.05;
+  font-family: var(--font-titre);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.012em;
+  line-height: 0.95;
+}
+
+/* Aux très grandes tailles la condensée se resserre d'elle-même : on rend
+   un peu d'air au crénage pour éviter le bloc compact. */
+@media (min-width: 640px) {
+  .titre-scene {
+    letter-spacing: 0.005em;
+  }
 }
 
 /* Étiquette « feuille de tournage » : petites capitales espacées, monospace. */

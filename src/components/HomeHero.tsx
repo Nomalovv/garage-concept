@@ -130,7 +130,7 @@ export default function HomeHero() {
             </motion.span>
             {finTitre ? (
               <motion.span
-                className="mt-1 block italic text-flamme-600"
+                className="mt-1 block text-flamme-600"
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 1.12, ease: EASE_CINEMA }}

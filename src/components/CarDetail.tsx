@@ -204,7 +204,7 @@ function CarView({ id }: { id: string }) {
             <h1 className="titre-scene mt-4 text-4xl text-nuit-950 sm:text-5xl">
               {car.brand} {car.model}{" "}
               {car.trim ? (
-                <span className="italic text-flamme-600">{car.trim}</span>
+                <span className="text-flamme-600">{car.trim}</span>
               ) : null}
             </h1>
             <p
